@@ -158,6 +158,38 @@ get_header();
 						<p class="sf-payment-note">
 							<?php esc_html_e( 'After transferring, please contact us to confirm your donation.', 'simple-fundraiser' ); ?>
 						</p>
+						
+						<?php 
+						$contact_info = get_post_meta( get_the_ID(), '_sf_contact_info', true );
+						if ( $contact_info ) :
+							$message = sprintf( 
+								__( 'Hello, I want to confirm my donation for %s.', 'simple-fundraiser' ), 
+								get_the_title() 
+							);
+							$wa_url = 'https://wa.me/' . esc_attr( $contact_info ) . '?text=' . urlencode( $message );
+						?>
+							<a href="<?php echo esc_url( $wa_url ); ?>" class="sf-confirm-button" target="_blank" rel="noopener noreferrer">
+								<span class="dashicons dashicons-whatsapp" style="vertical-align: middle; margin-right: 5px;"></span>
+								<?php esc_html_e( 'Confirm Donation', 'simple-fundraiser' ); ?>
+							</a>
+							<style>
+								.sf-confirm-button {
+									display: block;
+									text-align: center;
+									margin-top: 15px;
+									padding: 10px;
+									background: #25D366;
+									color: #fff;
+									border-radius: 6px;
+									text-decoration: none;
+									font-weight: 600;
+								}
+								.sf-confirm-button:hover {
+									background: #128C7E;
+									color: #fff;
+								}
+							</style>
+						<?php endif; ?>
 					</div>
 					
 					<!-- Share -->

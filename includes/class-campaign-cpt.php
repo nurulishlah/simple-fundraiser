@@ -126,6 +126,7 @@ class SF_Campaign_CPT {
 		$bank_name = get_post_meta( $post->ID, '_sf_bank_name', true );
 		$account_number = get_post_meta( $post->ID, '_sf_account_number', true );
 		$account_holder = get_post_meta( $post->ID, '_sf_account_holder', true );
+		$contact_info = get_post_meta( $post->ID, '_sf_contact_info', true );
 		$qris_image = get_post_meta( $post->ID, '_sf_qris_image', true );
 		?>
 		<table class="form-table">
@@ -145,6 +146,13 @@ class SF_Campaign_CPT {
 				<th><label for="sf_account_holder"><?php esc_html_e( 'Account Holder', 'simple-fundraiser' ); ?></label></th>
 				<td>
 					<input type="text" id="sf_account_holder" name="sf_account_holder" value="<?php echo esc_attr( $account_holder ); ?>" class="regular-text">
+				</td>
+			</tr>
+			<tr>
+				<th><label for="sf_contact_info"><?php esc_html_e( 'Contact (WhatsApp)', 'simple-fundraiser' ); ?></label></th>
+				<td>
+					<input type="text" id="sf_contact_info" name="sf_contact_info" value="<?php echo esc_attr( $contact_info ); ?>" class="regular-text" placeholder="e.g. 628123456789">
+					<p class="description"><?php esc_html_e( 'Number for donors to confirm (starts with country code, e.g. 62)', 'simple-fundraiser' ); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -209,6 +217,7 @@ class SF_Campaign_CPT {
 			'sf_bank_name'      => '_sf_bank_name',
 			'sf_account_number' => '_sf_account_number',
 			'sf_account_holder' => '_sf_account_holder',
+			'sf_contact_info'   => '_sf_contact_info',
 			'sf_qris_image'     => '_sf_qris_image',
 		);
 
