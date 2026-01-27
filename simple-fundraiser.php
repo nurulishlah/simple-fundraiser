@@ -32,6 +32,14 @@ require_once SF_PLUGIN_DIR . 'includes/class-export.php';
 require_once SF_PLUGIN_DIR . 'includes/class-ajax.php';
 require_once SF_PLUGIN_DIR . 'includes/class-import.php';
 
+// Excel Libraries
+if ( file_exists( SF_PLUGIN_DIR . 'includes/libs/SimpleXLSX.php' ) ) {
+	require_once SF_PLUGIN_DIR . 'includes/libs/SimpleXLSX.php';
+}
+if ( file_exists( SF_PLUGIN_DIR . 'includes/libs/SimpleXLSXGen.php' ) ) {
+	require_once SF_PLUGIN_DIR . 'includes/libs/SimpleXLSXGen.php';
+}
+
 /**
  * Initialize the plugin
  */
