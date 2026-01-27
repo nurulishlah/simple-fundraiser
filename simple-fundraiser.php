@@ -107,6 +107,10 @@ function sf_enqueue_scripts() {
 	wp_localize_script( 'simple-fundraiser-frontend', 'sf_ajax_obj', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'nonce'    => wp_create_nonce( 'sf_nonce' ),
+		'i18n'     => array(
+			'show_donations' => __( 'Show Donations', 'simple-fundraiser' ),
+			'hide_donations' => __( 'Hide Donations', 'simple-fundraiser' ),
+		),
 	) );
 }
 add_action( 'wp_enqueue_scripts', 'sf_enqueue_scripts' );

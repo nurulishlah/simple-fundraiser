@@ -344,7 +344,7 @@ get_header();
 							<a href="https://twitter.com/intent/tweet?text=<?php echo esc_attr( urlencode( get_the_title() ) ); ?>&url=<?php echo esc_attr( urlencode( get_permalink() ) ); ?>" 
 							   class="sf-share-tw" target="_blank" rel="noopener noreferrer">
 								<span class="dashicons dashicons-twitter" style="vertical-align: middle;"></span>
-								<?php esc_html_e( 'Twitter', 'simple-fundraiser' ); ?>
+								<?php esc_html_e( 'X', 'simple-fundraiser' ); ?>
 							</a>
 						</div>
 					</div>

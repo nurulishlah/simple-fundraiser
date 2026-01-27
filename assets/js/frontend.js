@@ -96,10 +96,10 @@ jQuery(document).ready(function ($) {
 
         if ($content.is(':visible')) {
             $content.slideUp();
-            $btn.text('Show Donations');
+            $btn.text(sf_ajax_obj.i18n.show_donations);
         } else {
             $content.slideDown();
-            $btn.text('Hide Donations');
+            $btn.text(sf_ajax_obj.i18n.hide_donations);
         }
     });
 });
