@@ -408,11 +408,62 @@
     color: #999;
 }
 
+/* Typography Improvements */
+.sf-single-content p {
+    margin-bottom: 1.5em;
+}
+
+/* QRIS Centering */
+.sf-qris-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+/* Toggle Button */
+#sf-toggle-donations {
+    background: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#sf-toggle-donations:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
 .sf-no-donations,
 .sf-no-campaigns {
     text-align: center;
     color: #666;
     padding: 40px;
+}
+
+/* Confirm Button */
+.sf-confirm-button {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.sf-confirm-button:hover {
+    background: #128C7E;
+    color: #fff;
 }
 
 /* Back Link */

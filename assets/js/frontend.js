@@ -87,4 +87,19 @@ jQuery(document).ready(function ($) {
     $('.sf-sort-form').on('submit', function (e) {
         e.preventDefault();
     });
+
+    // Toggle Donations
+    $('#sf-toggle-donations').on('click', function (e) {
+        e.preventDefault();
+        var $content = $('#sf-donations-content');
+        var $btn = $(this);
+
+        if ($content.is(':visible')) {
+            $content.slideUp();
+            $btn.text(sf_ajax_obj.i18n.show_donations);
+        } else {
+            $content.slideDown();
+            $btn.text(sf_ajax_obj.i18n.hide_donations);
+        }
+    });
 });

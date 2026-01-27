@@ -518,8 +518,14 @@ msgid "Facebook"
 msgstr "Facebook"
 
 #: templates/single-sf_campaign.php:210
-msgid "Twitter"
-msgstr "Twitter"
+msgid "X"
+msgstr "X"
+
+msgid "Show Donations"
+msgstr "Tampilkan Donasi"
+
+msgid "Hide Donations"
+msgstr "Sembunyikan Donasi"
 
 #: templates/single-sf_campaign.php:218
 msgid "Back to All Campaigns"
