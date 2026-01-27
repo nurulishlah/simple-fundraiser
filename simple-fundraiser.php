@@ -101,6 +101,8 @@ function sf_enqueue_scripts() {
 		$version,
 		true
 	);
+	
+	wp_enqueue_style( 'dashicons' );
 
 	wp_localize_script( 'simple-fundraiser-frontend', 'sf_ajax_obj', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),

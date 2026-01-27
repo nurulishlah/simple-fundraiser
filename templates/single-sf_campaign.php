@@ -35,7 +35,14 @@ get_header();
 					
 					<!-- Recent Donations -->
 					<div class="sf-recent-donations" id="sf-donations-wrapper" data-campaign-id="<?php the_ID(); ?>">
-						<h3><?php esc_html_e( 'Recent Donations', 'simple-fundraiser' ); ?></h3>
+						<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e9ecef; padding-bottom: 15px; margin-bottom: 20px;">
+							<h3 style="margin: 0; border: none; padding: 0;"><?php esc_html_e( 'Recent Donations', 'simple-fundraiser' ); ?></h3>
+							<button id="sf-toggle-donations" class="button button-small" style="cursor: pointer;">
+								<?php esc_html_e( 'Hide Donations', 'simple-fundraiser' ); ?>
+							</button>
+						</div>
+						
+						<div id="sf-donations-content">
 						
 						<?php
 						// Params
@@ -153,6 +160,7 @@ get_header();
 						<?php else : ?>
 							<p class="sf-no-donations"><?php esc_html_e( 'Be the first to donate!', 'simple-fundraiser' ); ?></p>
 						<?php endif; ?>
+						</div> <!-- #sf-donations-content -->
 					</div>
 				</div>
 				
@@ -316,23 +324,6 @@ get_header();
 								<span class="dashicons dashicons-whatsapp" style="vertical-align: middle; margin-right: 5px;"></span>
 								<?php esc_html_e( 'Confirm Donation', 'simple-fundraiser' ); ?>
 							</a>
-							<style>
-								.sf-confirm-button {
-									display: block;
-									text-align: center;
-									margin-top: 15px;
-									padding: 10px;
-									background: #25D366;
-									color: #fff;
-									border-radius: 6px;
-									text-decoration: none;
-									font-weight: 600;
-								}
-								.sf-confirm-button:hover {
-									background: #128C7E;
-									color: #fff;
-								}
-							</style>
 						<?php endif; ?>
 					</div>
 					
@@ -342,14 +333,17 @@ get_header();
 						<div class="sf-share-buttons">
 							<a href="https://wa.me/?text=<?php echo esc_attr( urlencode( get_the_title() . ' - ' . get_permalink() ) ); ?>" 
 							   class="sf-share-wa" target="_blank" rel="noopener noreferrer">
+								<span class="dashicons dashicons-whatsapp" style="vertical-align: middle;"></span>
 								<?php esc_html_e( 'WhatsApp', 'simple-fundraiser' ); ?>
 							</a>
 							<a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo esc_attr( urlencode( get_permalink() ) ); ?>" 
 							   class="sf-share-fb" target="_blank" rel="noopener noreferrer">
+								<span class="dashicons dashicons-facebook" style="vertical-align: middle;"></span>
 								<?php esc_html_e( 'Facebook', 'simple-fundraiser' ); ?>
 							</a>
 							<a href="https://twitter.com/intent/tweet?text=<?php echo esc_attr( urlencode( get_the_title() ) ); ?>&url=<?php echo esc_attr( urlencode( get_permalink() ) ); ?>" 
 							   class="sf-share-tw" target="_blank" rel="noopener noreferrer">
+								<span class="dashicons dashicons-twitter" style="vertical-align: middle;"></span>
 								<?php esc_html_e( 'Twitter', 'simple-fundraiser' ); ?>
 							</a>
 						</div>
