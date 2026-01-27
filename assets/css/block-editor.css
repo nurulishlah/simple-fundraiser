@@ -1,0 +1,51 @@
+/**
+ * Simple Fundraiser - Block Editor Styles
+ */
+
+/* Block placeholder in editor */
+.wp-block-simple-fundraiser-campaigns {
+    min-height: 100px;
+    position: relative;
+}
+
+/* Editor loading state */
+.wp-block-simple-fundraiser-campaigns .components-placeholder {
+    background: #f8f9fa;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    padding: 20px;
+}
+
+/* Preview wrapper in editor */
+.wp-block-simple-fundraiser-campaigns .sf-campaigns-widget {
+    pointer-events: none;
+}
+
+/* Fix for ServerSideRender loading state */
+.wp-block-simple-fundraiser-campaigns .components-spinner {
+    margin: 20px auto;
+    display: block;
+}
+
+/* Override some widget styles for editor preview */
+.editor-styles-wrapper .sf-widget-card:hover {
+    transform: none;
+}
+
+.editor-styles-wrapper .sf-widget-hero:hover .sf-hero-image img {
+    transform: none;
+}
+
+/* Ensure grid displays properly in editor */
+.editor-styles-wrapper .sf-widget-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+/* Responsive preview adjustments */
+@media (max-width: 782px) {
+    .editor-styles-wrapper .sf-widget-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

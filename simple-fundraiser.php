@@ -31,6 +31,9 @@ require_once SF_PLUGIN_DIR . 'includes/class-admin.php';
 require_once SF_PLUGIN_DIR . 'includes/class-export.php';
 require_once SF_PLUGIN_DIR . 'includes/class-ajax.php';
 require_once SF_PLUGIN_DIR . 'includes/class-import.php';
+require_once SF_PLUGIN_DIR . 'includes/class-widget-renderer.php';
+require_once SF_PLUGIN_DIR . 'includes/class-widget.php';
+require_once SF_PLUGIN_DIR . 'includes/class-block.php';
 
 // Excel Libraries
 if ( file_exists( SF_PLUGIN_DIR . 'includes/libs/SimpleXLSX.php' ) ) {
@@ -54,6 +57,7 @@ function sf_init() {
 	new SF_Export();
 	new SF_Ajax();
 	new SF_Import();
+	new SF_Campaigns_Block();
 }
 add_action( 'plugins_loaded', 'sf_init' );
 
