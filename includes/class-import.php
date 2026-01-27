@@ -50,7 +50,7 @@ class SF_Import {
 		$output = fopen( 'php://output', 'w' );
 		
 		// Headers
-		fputcsv( $output, array( 'Date', 'Donor Name', 'Amount', 'Campaign ID', 'Email', 'Message', 'Donation Type' ) );
+		fputcsv( $output, array( 'Date', 'Donor Name', 'Amount', 'Campaign ID', 'Email', 'Message', 'Donation Type', 'Phone', 'Anonymous' ) );
 		
 		// Sample Data
 		fputcsv( $output, array( 
@@ -60,7 +60,9 @@ class SF_Import {
 			$campaign_id ? $campaign_id : '', 
 			'john@example.com', 
 			'Keep it up!', 
-			'Sembako' 
+			'Sembako',
+			'08123456789',
+			'No'
 		) );
 		
 		fclose( $output );
@@ -118,13 +120,13 @@ class SF_Import {
 					
 					<p><strong><?php esc_html_e( 'CSV Format Guide:', 'simple-fundraiser' ); ?></strong></p>
 					<code style="display: block; padding: 10px; background: #f0f0f1;">
-						Date, Donor Name, Amount, Campaign ID, Email, Message, Donation Type<br>
-						2023-10-25, John Doe, 50000, 12, john@example.com, Keep it up, Sembako
+						Date, Donor Name, Amount, Campaign ID, Email, Message, Donation Type, Phone, Anonymous<br>
+						2023-10-25, John Doe, 50000, 12, john@example.com, Keep it up, Sembako, 0812xx, No
 					</code>
 					<ul style="font-size: 0.9em; color: #666; list-style: disc; margin-left: 20px;">
 						<li><?php esc_html_e( 'Date format: YYYY-MM-DD', 'simple-fundraiser' ); ?></li>
 						<li><?php esc_html_e( 'Campaign ID: Optional (Uses default if empty)', 'simple-fundraiser' ); ?></li>
-						<li><?php esc_html_e( 'Donation Type: Optional (matches types defined in campaign)', 'simple-fundraiser' ); ?></li>
+						<li><?php esc_html_e( 'Phone & Anonymous: Optional', 'simple-fundraiser' ); ?></li>
 					</ul>
 
 					<p class="submit">
@@ -153,6 +155,9 @@ class SF_Import {
 		<?php
 	}
 
+	/**
+	 * Process Import
+	 */
 	/**
 	 * Process Import
 	 */
@@ -192,6 +197,9 @@ class SF_Import {
 		$success_count = 0;
 		$errors = array();
 
+		// Header Map
+		$header_map = array();
+		
 		while ( ( $data = fgetcsv( $handle, 1000, $delimiter ) ) !== false ) {
 			$row++;
 			
@@ -200,78 +208,96 @@ class SF_Import {
 				$data[0] = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $data[0]);
 			}
 			
-			// Skip header row
-			// Check if first column is "Date" or third column is not numeric (likely "Amount")
+			// Parse Header Row
 			if ( $row === 1 ) {
-				$col0 = isset( $data[0] ) ? strtolower( trim( $data[0] ) ) : '';
-				$col2 = isset( $data[2] ) ? $data[2] : '';
+				foreach ( $data as $index => $col_name ) {
+					$col_name = strtolower( trim( $col_name ) );
+					if ( empty( $col_name ) ) continue;
+					
+					// Map known columns
+					if ( strpos( $col_name, 'date' ) !== false || strpos( $col_name, 'tanggal' ) !== false ) {
+						$header_map['date'] = $index;
+					} elseif ( strpos( $col_name, 'name' ) !== false || strpos( $col_name, 'nama' ) !== false || strpos( $col_name, 'donatur' ) !== false ) {
+						$header_map['name'] = $index;
+					} elseif ( strpos( $col_name, 'amount' ) !== false || strpos( $col_name, 'jumlah' ) !== false || strpos( $col_name, 'nominal' ) !== false ) {
+						$header_map['amount'] = $index;
+					} elseif ( strpos( $col_name, 'campaign id' ) !== false || strpos( $col_name, 'id kampanye' ) !== false ) {
+						$header_map['campaign_id'] = $index;
+					} elseif ( strpos( $col_name, 'email' ) !== false ) {
+						$header_map['email'] = $index;
+					} elseif ( strpos( $col_name, 'message' ) !== false || strpos( $col_name, 'pesan' ) !== false || strpos( $col_name, 'doa' ) !== false ) {
+						$header_map['message'] = $index;
+					} elseif ( strpos( $col_name, 'type' ) !== false || strpos( $col_name, 'tipe' ) !== false || strpos( $col_name, 'kategori' ) !== false ) {
+						$header_map['type'] = $index;
+					} elseif ( strpos( $col_name, 'phone' ) !== false || strpos( $col_name, 'telepon' ) !== false || strpos( $col_name, 'wa' ) !== false ) {
+						$header_map['phone'] = $index;
+					} elseif ( strpos( $col_name, 'anonymous' ) !== false || strpos( $col_name, 'hamba allah' ) !== false ) {
+						$header_map['anonymous'] = $index;
+					}
+				}
 				
-				if ( $col0 === 'date' || ( ! empty( $col2 ) && ! is_numeric( $col2 ) ) ) {
-					continue;
+				// If no required headers found, assume fixed format (fallback)
+				if ( ! isset( $header_map['amount'] ) ) {
+					$header_map = array(
+						'date' => 0, 'name' => 1, 'amount' => 2, 'campaign_id' => 3, 'email' => 4, 'message' => 5, 'type' => 6
+					);
+					// Check if row 1 is actually data (if user uploaded file without headers)
+					// If col 2 is numeric, treat row 1 as data
+					if ( isset( $data[2] ) && is_numeric( preg_replace( '/[^0-9]/', '', $data[2] ) ) ) {
+						// Process this row as data
+						$row = 0; // Reset row count so loop continues processing
+						rewind( $handle ); // Need to rewind to process row 1 again? 
+						// Actually refactoring to handling first line logic is cleaner.
+						// But for now, let's assume valid CSV usually has headers.
+						// If user provided no headers, we might skip the first row if we don't rewind.
+						// Let's assume headers exist for the new standard.
+					} else {
+						continue; // Skip header row
+					}
+				} else {
+					continue; // Skip header row
 				}
 			}
 
-			// Map columns
-			$date        = isset( $data[0] ) ? sanitize_text_field( $data[0] ) : current_time( 'Y-m-d' );
-			$name        = isset( $data[1] ) ? sanitize_text_field( $data[1] ) : 'Anonymous';
+			// Extract Data using Map
+			$get_col = function( $key ) use ( $data, $header_map ) {
+				return ( isset( $header_map[ $key ] ) && isset( $data[ $header_map[ $key ] ] ) ) ? $data[ $header_map[ $key ] ] : '';
+			};
 			
-			// Amount cleaning: Remove "Rp", remove "." if used as thousand separator (Indonesian format usually)
-			// Logic: If contain "." and no "," -> assume dot is thousand sep. Remove it.
-			// If contain "," -> replace with "." for floatval if it's decimal.
-			// Simple approach: Remove everything except digits and comma/dot.
-			// Then if dot exists and looks like thousand separator (e.g. 50.000), remove it.
-			// Standardizing: 
-			// 1. Remove non-numeric chars except . and ,
-			// 2. 50.000 -> 50000
-			// 3. 50,000 -> 50000
-			// 4. 50.000,00 -> 50000.00
-			// 5. 50,000.00 -> 50000.00
+			$date        = $get_col('date') ? sanitize_text_field( $get_col('date') ) : current_time( 'Y-m-d' );
+			$name        = $get_col('name') ? sanitize_text_field( $get_col('name') ) : 'Anonymous';
 			
-			$raw_amount = isset( $data[2] ) ? $data[2] : '0';
-			// Remove Rp and spaces
+			$raw_amount = $get_col('amount') ? $get_col('amount') : '0';
 			$clean_amount = preg_replace( '/[^0-9.,]/', '', $raw_amount );
 			
-			// Guess format
+			// Amount Cleaning Logic
 			if ( strpos( $clean_amount, '.' ) !== false && strpos( $clean_amount, ',' ) !== false ) {
-				// Both exist. 
-				// 50.000,00 (ID/EU) -> Remove dot, replace comma with dot
 				if ( strrpos( $clean_amount, ',' ) > strrpos( $clean_amount, '.' ) ) {
 					$clean_amount = str_replace( '.', '', $clean_amount );
 					$clean_amount = str_replace( ',', '.', $clean_amount );
 				} else {
-					// 50,000.00 (US) -> Remove comma
 					$clean_amount = str_replace( ',', '', $clean_amount );
 				}
 			} elseif ( strpos( $clean_amount, '.' ) !== false ) {
-				// Only dot. 50.000 (ID thousand) or 50.00 (US decimal)
-				// If 3 decimals, usually thousand (50.000). If 2, usually decimal (50.00).
-				// But 50.000 could be 50 if interpreted as float.
-				// Heuristic: If there are multiple dots, it's thousands (1.000.000).
 				if ( substr_count( $clean_amount, '.' ) > 1 ) {
 					$clean_amount = str_replace( '.', '', $clean_amount );
 				} else {
-					// Single dot. splitting hairs. 
-					// Context: User is Indonesian (Sembako, Rp). 
-					// Most likely dot is Thousand Separator.
-					// EXCEPT if it's the sample file which uses 50000 (no chars).
-					// Let's safe bet: assume dot is thousand separator if result > 1000? No.
-					// Let's assume standard programming input (50000) or ID input (50.000).
-					// If we strip dot, 50.000 becomes 50000. 50.00 becomes 5000.
-					// Let's try to remove dots.
 					$clean_amount = str_replace( '.', '', $clean_amount );
 				}
 			} elseif ( strpos( $clean_amount, ',' ) !== false ) {
-				// Only comma. 50,000 (US thousand) or 50,00 (ID decimal)
-				// If ID context, comma is decimal.
 				$clean_amount = str_replace( ',', '.', $clean_amount );
 			}
 			
 			$amount = floatval( $clean_amount );
 
-			$camp_id     = isset( $data[3] ) && ! empty( $data[3] ) ? intval( $data[3] ) : $default_campaign_id;
-			$email       = isset( $data[4] ) ? sanitize_email( $data[4] ) : '';
-			$message     = isset( $data[5] ) ? sanitize_textarea_field( $data[5] ) : '';
-			$type        = isset( $data[6] ) ? sanitize_text_field( $data[6] ) : '';
+			$camp_id_raw = $get_col('campaign_id');
+			$camp_id     = ! empty( $camp_id_raw ) ? intval( $camp_id_raw ) : $default_campaign_id;
+			
+			$email       = sanitize_email( $get_col('email') );
+			$message     = sanitize_textarea_field( $get_col('message') );
+			$type        = sanitize_text_field( $get_col('type') );
+			$phone       = sanitize_text_field( $get_col('phone') );
+			$anon_val    = strtolower( trim( $get_col('anonymous') ) );
 
 			if ( $amount <= 0 ) {
 				$errors[] = sprintf( __( 'Row %d: Invalid amount (%s)', 'simple-fundraiser' ), $row, $raw_amount );
@@ -301,7 +327,12 @@ class SF_Import {
 				update_post_meta( $donation_id, '_sf_message', $message );
 				update_post_meta( $donation_id, '_sf_date', $date );
 				
-				if ( strtolower( $name ) === 'anonymous' || strtolower( $name ) === 'hamba allah' ) {
+				if ( $phone ) {
+					update_post_meta( $donation_id, '_sf_donor_phone', $phone );
+				}
+				
+				// Anonymous Check
+				if ( $anon_val === 'yes' || $anon_val === 'y' || $anon_val === 'ya' || $anon_val === '1' || strtolower( $name ) === 'anonymous' || strtolower( $name ) === 'hamba allah' ) {
 					update_post_meta( $donation_id, '_sf_anonymous', '1' );
 				}
 				

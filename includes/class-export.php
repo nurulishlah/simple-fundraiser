@@ -154,16 +154,17 @@ class SF_Export {
 		// CSV header
 		// Headers
 		$headers = array(
-			__( 'ID', 'simple-fundraiser' ),
 			__( 'Date', 'simple-fundraiser' ),
 			__( 'Donor Name', 'simple-fundraiser' ),
-			__( 'Email', 'simple-fundraiser' ),
-			__( 'Phone', 'simple-fundraiser' ),
 			__( 'Amount', 'simple-fundraiser' ),
-			__( 'Campaign', 'simple-fundraiser' ),
-			__( 'Donation Type', 'simple-fundraiser' ),
+			__( 'Campaign ID', 'simple-fundraiser' ),
+			__( 'Email', 'simple-fundraiser' ),
 			__( 'Message', 'simple-fundraiser' ),
+			__( 'Donation Type', 'simple-fundraiser' ),
+			__( 'Phone', 'simple-fundraiser' ),
 			__( 'Anonymous', 'simple-fundraiser' ),
+			__( 'Campaign Title', 'simple-fundraiser' ),
+			__( 'ID', 'simple-fundraiser' ),
 		);
 		
 		fputcsv( $output, $headers );
@@ -181,16 +182,17 @@ class SF_Export {
 			$type = get_post_meta( $donation->ID, '_sf_donation_type', true );
 			
 			$row = array(
-				$donation->ID,
 				$date,
 				$donor_name,
-				$donor_email,
-				$donor_phone,
 				$amount,
-				get_the_title( $campaign_id ),
-				$type,
+				$campaign_id,
+				$donor_email,
 				$message,
+				$type,
+				$donor_phone,
 				$anonymous === '1' ? __( 'Yes', 'simple-fundraiser' ) : __( 'No', 'simple-fundraiser' ),
+				get_the_title( $campaign_id ),
+				$donation->ID,
 			);
 			
 			fputcsv( $output, $row );
