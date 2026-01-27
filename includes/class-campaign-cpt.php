@@ -106,7 +106,7 @@ class SF_Campaign_CPT {
 			<tr>
 				<th><label for="sf_goal"><?php esc_html_e( 'Goal Amount (Rp)', 'simple-fundraiser' ); ?></label></th>
 				<td>
-					<input type="number" id="sf_goal" name="sf_goal" value="<?php echo esc_attr( $goal ); ?>" class="regular-text" min="0" step="1000">
+					<input type="number" id="sf_goal" name="sf_goal" value="<?php echo esc_attr( $goal ); ?>" class="regular-text" min="0" step="1">
 				</td>
 			</tr>
 			<tr>

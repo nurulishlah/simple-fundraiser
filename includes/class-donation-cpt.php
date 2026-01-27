@@ -117,7 +117,7 @@ class SF_Donation_CPT {
 			<tr>
 				<th><label for="sf_amount"><?php esc_html_e( 'Amount (Rp)', 'simple-fundraiser' ); ?></label></th>
 				<td>
-					<input type="number" id="sf_amount" name="sf_amount" value="<?php echo esc_attr( $amount ); ?>" class="regular-text" min="0" step="1000" required>
+					<input type="number" id="sf_amount" name="sf_amount" value="<?php echo esc_attr( $amount ); ?>" class="regular-text" min="0" step="1" required>
 				</td>
 			</tr>
 			<tr>
