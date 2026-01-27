@@ -447,6 +447,25 @@
     padding: 40px;
 }
 
+/* Confirm Button */
+.sf-confirm-button {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.sf-confirm-button:hover {
+    background: #128C7E;
+    color: #fff;
+}
+
 /* Back Link */
 .sf-back-link {
     display: inline-block;
