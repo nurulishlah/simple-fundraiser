@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Simple Fundraiser 1.0.0\n"
+"Project-Id-Version: Simple Fundraiser 1.1.0\n"
 "Report-Msgid-Bugs-To: https://github.com/nurulishlah/simple-fundraiser/issues\n"
 "POT-Creation-Date: 2026-01-27 15:00+0700\n"
 "PO-Revision-Date: 2026-01-27 15:00+0700\n"
