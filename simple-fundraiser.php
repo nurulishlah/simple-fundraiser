@@ -3,7 +3,7 @@
  * Plugin Name: Simple Fundraiser
  * Plugin URI: https://github.com/nurulishlah/simple-fundraiser
  * Description: A simple fundraising plugin for mosques and organizations
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Nurul Ishlah
  * Author URI: https://github.com/nurulishlah
  * License: GPL v2 or later
@@ -30,6 +30,7 @@ require_once SF_PLUGIN_DIR . 'includes/class-donation-cpt.php';
 require_once SF_PLUGIN_DIR . 'includes/class-admin.php';
 require_once SF_PLUGIN_DIR . 'includes/class-export.php';
 require_once SF_PLUGIN_DIR . 'includes/class-ajax.php';
+require_once SF_PLUGIN_DIR . 'includes/class-import.php';
 
 /**
  * Initialize the plugin
@@ -44,6 +45,7 @@ function sf_init() {
 	new SF_Admin();
 	new SF_Export();
 	new SF_Ajax();
+	new SF_Import();
 }
 add_action( 'plugins_loaded', 'sf_init' );
 

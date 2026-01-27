@@ -4,7 +4,7 @@ Tags: fundraising, donation, charity, mosque, infaq
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,6 +17,7 @@ Simple Fundraiser is a lightweight plugin designed to help mosques, charities, a
 **Features:**
 *   **Unlimited Campaigns:** Create as many fundraising campaigns as you need.
 *   **Manual Donation Entry:** Record offline donations (cash, transfer) manually via the admin dashboard.
+*   **Import Donations:** Bulk import donations via CSV file with smart delimiter detection.
 *   **Progress Bars:** Display beautiful progress bars for each campaign using shortcodes or built-in templates.
 *   **Donation Breakdown:** Support for sub-categories (e.g., Sembako, Activities) with automatic totals.
 *   **Multi-Currency Support:** Customizable currency symbol, decimal places, and separators.
@@ -51,6 +52,11 @@ Yes! Go to **Fundraiser > Settings** to change the currency symbol (e.g., Rp, $)
 4.  **Donation Entry** - Simple form to record new donations.
 
 == Changelog ==
+
+= 1.2.0 =
+*   New Feature: Bulk Import Donations via CSV.
+*   New Feature: AJAX-based pagination and sorting for donation lists.
+*   Improvement: Added loading state and smoother UI interactions.
 
 = 1.1.0 =
 *   New Feature: Multi-category donation types (e.g., Sembako, Activity) with frontend breakdown.
