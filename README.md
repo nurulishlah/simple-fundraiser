@@ -46,6 +46,17 @@ Go to **Fundraiser > Export** to download CSV of donations.
 
 ## Changelog
 
+### 1.3.0
+- New Feature: Excel (.xlsx) Import and Export support
+- New Feature: "Show/Hide Donations" toggle
+- Improvement: Added social icons and rebranded Twitter to X
+- Improvement: UI/UX enhancements (Typography, Spacing)
+- Update: Indonesian translations
+
+### 1.2.0
+- New Feature: Bulk Import Donations
+- New Feature: AJAX Pagination/Sorting
+
 ### 1.0.0
 - Initial release
 

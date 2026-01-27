@@ -32,6 +32,14 @@ require_once SF_PLUGIN_DIR . 'includes/class-export.php';
 require_once SF_PLUGIN_DIR . 'includes/class-ajax.php';
 require_once SF_PLUGIN_DIR . 'includes/class-import.php';
 
+// Excel Libraries
+if ( file_exists( SF_PLUGIN_DIR . 'includes/libs/SimpleXLSX.php' ) ) {
+	require_once SF_PLUGIN_DIR . 'includes/libs/SimpleXLSX.php';
+}
+if ( file_exists( SF_PLUGIN_DIR . 'includes/libs/SimpleXLSXGen.php' ) ) {
+	require_once SF_PLUGIN_DIR . 'includes/libs/SimpleXLSXGen.php';
+}
+
 /**
  * Initialize the plugin
  */
@@ -93,10 +101,16 @@ function sf_enqueue_scripts() {
 		$version,
 		true
 	);
+	
+	wp_enqueue_style( 'dashicons' );
 
 	wp_localize_script( 'simple-fundraiser-frontend', 'sf_ajax_obj', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'nonce'    => wp_create_nonce( 'sf_nonce' ),
+		'i18n'     => array(
+			'show_donations' => __( 'Show Donations', 'simple-fundraiser' ),
+			'hide_donations' => __( 'Hide Donations', 'simple-fundraiser' ),
+		),
 	) );
 }
 add_action( 'wp_enqueue_scripts', 'sf_enqueue_scripts' );

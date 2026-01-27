@@ -23,8 +23,10 @@ Simple Fundraiser is a lightweight plugin designed to help mosques, charities, a
 *   **Multi-Currency Support:** Customizable currency symbol, decimal places, and separators.
 *   **Payment Information:** Display Bank Transfer details and QRIS codes.
 *   **WhatsApp Confirmation:** Allow donors to quickly confirm their donation via WhatsApp.
-*   **Export Data:** Export donation records to CSV for reporting.
+*   **Export Data:** Export donation records to CSV or Excel (.xlsx) for reporting.
 *   **Translation Ready:** Fully localized and includes Bahasa Indonesia translation.
+*   **Excel Support:** Import and Export data using Excel files.
+*   **Social Sharing:** Integrated sharing buttons for WhatsApp, Facebook, and X.
 
 == Installation ==
 
@@ -52,6 +54,14 @@ Yes! Go to **Fundraiser > Settings** to change the currency symbol (e.g., Rp, $)
 4.  **Donation Entry** - Simple form to record new donations.
 
 == Changelog ==
+
+= 1.3.0 =
+*   New Feature: Excel (.xlsx) Import and Export support.
+*   New Feature: "Show/Hide Donations" toggle for better UX.
+*   Improvement: Added icons to confirmation and share buttons.
+*   Improvement: Renamed "Twitter" to "X".
+*   Improvement: Enhanced typography and layout spacing.
+*   Update: Complete Indonesian (id_ID) translation.
 
 = 1.2.0 =
 *   New Feature: Bulk Import Donations via CSV.
