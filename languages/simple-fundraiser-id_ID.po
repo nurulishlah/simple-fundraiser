@@ -281,9 +281,7 @@ msgstr "Pengaturan Penggalangan"
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: includes/class-admin.php:40
-msgid "Fundraiser Stats"
-msgstr "Statistik Penggalangan"
+
 
 #: includes/class-admin.php:48
 msgid "Currency Settings"
@@ -433,9 +431,7 @@ msgstr "Donasi Sekarang"
 msgid "&laquo; Previous"
 msgstr "&laquo; Sebelumnya"
 
-#: templates/archive-sf_campaign.php:83
-msgid "Next &raquo;"
-msgstr "Selanjutnya &raquo;"
+
 
 #: templates/archive-sf_campaign.php:87
 msgid "No campaigns found. Check back soon!"
@@ -536,10 +532,6 @@ msgstr "Umum"
 #: includes/class-admin.php:144 includes/class-import.php:29
 msgid "Import"
 msgstr "Impor"
-
-#: includes/class-admin.php:145 includes/class-export.php:25
-msgid "Export"
-msgstr "Ekspor"
 
 #: includes/class-import.php:97
 msgid "Default Campaign"
