@@ -3,7 +3,7 @@
  * Plugin Name: Simple Fundraiser
  * Plugin URI: https://github.com/nurulishlah/simple-fundraiser
  * Description: A simple fundraising plugin for mosques and organizations
- * Version: 1.2.0
+ * Version: 1.3.0
  * Author: Nurul Ishlah
  * Author URI: https://github.com/nurulishlah
  * License: GPL v2 or later
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants
-define( 'SF_VERSION', '1.1.0' );
+define( 'SF_VERSION', '1.3.0' );
 define( 'SF_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

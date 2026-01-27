@@ -15,7 +15,7 @@ class SF_Import {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'add_import_menu' ) );
+		// add_action( 'admin_menu', array( $this, 'add_import_menu' ) ); // Moved to Settings tab
 		add_action( 'admin_post_sf_download_sample', array( $this, 'handle_sample_download' ) );
 	}
 
@@ -72,7 +72,10 @@ class SF_Import {
 	/**
 	 * Render import page
 	 */
-	public function render_import_page() {
+	/**
+	 * Render content (for Settings tab)
+	 */
+	public function render_content() {
 		// Handle submission
 		$this->process_import();
 
@@ -83,75 +86,75 @@ class SF_Import {
 			'post_status'    => 'publish',
 		) );
 		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Import Donations', 'simple-fundraiser' ); ?></h1>
+		<form method="post" enctype="multipart/form-data">
+			<?php wp_nonce_field( 'sf_import_action', 'sf_import_nonce' ); ?>
 			
-			<div class="card" style="max-width: 600px; padding: 20px; margin-top: 20px;">
-				<form method="post" enctype="multipart/form-data">
-					<?php wp_nonce_field( 'sf_import_action', 'sf_import_nonce' ); ?>
-					
-					<p>
-						<label for="sf_default_campaign"><strong><?php esc_html_e( 'Default Campaign', 'simple-fundraiser' ); ?></strong></label><br>
-						<span class="description"><?php esc_html_e( 'Assign to this campaign if "Campaign ID" column is empty in CSV.', 'simple-fundraiser' ); ?></span>
+			<table class="form-table">
+				<tr>
+					<th><label for="sf_default_campaign"><?php esc_html_e( 'Default Campaign', 'simple-fundraiser' ); ?></label></th>
+					<td>
+						<select name="sf_default_campaign" id="sf_default_campaign" class="regular-text">
+							<option value=""><?php esc_html_e( '-- Select Campaign --', 'simple-fundraiser' ); ?></option>
+							<?php foreach ( $campaigns as $campaign ) : ?>
+								<option value="<?php echo esc_attr( $campaign->ID ); ?>"><?php echo esc_html( $campaign->post_title ); ?> (ID: <?php echo esc_html( $campaign->ID ); ?>)</option>
+							<?php endforeach; ?>
+						</select>
+						<p class="description">
+							<?php esc_html_e( 'Assign to this campaign if "Campaign ID" column is empty in CSV.', 'simple-fundraiser' ); ?>
+						</p>
 						<br>
-						<div style="display: flex; gap: 10px; align-items: flex-start;">
-							<select name="sf_default_campaign" id="sf_default_campaign" style="flex-grow: 1;">
-								<option value=""><?php esc_html_e( '-- Select Campaign --', 'simple-fundraiser' ); ?></option>
-								<?php foreach ( $campaigns as $campaign ) : ?>
-									<option value="<?php echo esc_attr( $campaign->ID ); ?>"><?php echo esc_html( $campaign->post_title ); ?> (ID: <?php echo esc_html( $campaign->ID ); ?>)</option>
-								<?php endforeach; ?>
-							</select>
-							
-							<a href="<?php echo esc_url( admin_url( 'admin-post.php?action=sf_download_sample' ) ); ?>" 
-							   class="button" 
-							   id="sf_download_sample" 
-							   target="_blank">
-								<?php esc_html_e( 'Download Sample CSV', 'simple-fundraiser' ); ?>
-							</a>
-						</div>
-					</p>
-
-					<p>
-						<label for="sf_import_file"><strong><?php esc_html_e( 'CSV File', 'simple-fundraiser' ); ?></strong></label><br>
+						<a href="<?php echo esc_url( admin_url( 'admin-post.php?action=sf_download_sample' ) ); ?>" 
+						   id="sf_download_sample" 
+						   target="_blank">
+							<?php esc_html_e( 'Download Sample CSV', 'simple-fundraiser' ); ?>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="sf_import_file"><?php esc_html_e( 'CSV File', 'simple-fundraiser' ); ?></label></th>
+					<td>
 						<input type="file" name="sf_import_file" id="sf_import_file" accept=".csv" required>
-					</p>
+					</td>
+				</tr>
+			</table>
+			
+			<hr>
+			
+			<h3><?php esc_html_e( 'CSV Format Guide', 'simple-fundraiser' ); ?></h3>
+			<p><?php esc_html_e( 'Your CSV should follow this structure:', 'simple-fundraiser' ); ?></p>
+			
+			<code style="display: block; padding: 10px; background: #f0f0f1; margin: 10px 0;">
+				Date, Donor Name, Amount, Campaign ID, Email, Message, Donation Type, Phone, Anonymous<br>
+				2023-10-25, John Doe, 50000, 12, john@example.com, Keep it up, Sembako, 0812xx, No
+			</code>
+			
+			<ul style="font-size: 0.9em; color: #666; list-style: disc; margin-left: 20px;">
+				<li><?php esc_html_e( 'Date format: YYYY-MM-DD', 'simple-fundraiser' ); ?></li>
+				<li><?php esc_html_e( 'Campaign ID: Optional (Uses default if empty)', 'simple-fundraiser' ); ?></li>
+				<li><?php esc_html_e( 'Phone & Anonymous: Optional', 'simple-fundraiser' ); ?></li>
+			</ul>
 
-					<hr>
-					
-					<p><strong><?php esc_html_e( 'CSV Format Guide:', 'simple-fundraiser' ); ?></strong></p>
-					<code style="display: block; padding: 10px; background: #f0f0f1;">
-						Date, Donor Name, Amount, Campaign ID, Email, Message, Donation Type, Phone, Anonymous<br>
-						2023-10-25, John Doe, 50000, 12, john@example.com, Keep it up, Sembako, 0812xx, No
-					</code>
-					<ul style="font-size: 0.9em; color: #666; list-style: disc; margin-left: 20px;">
-						<li><?php esc_html_e( 'Date format: YYYY-MM-DD', 'simple-fundraiser' ); ?></li>
-						<li><?php esc_html_e( 'Campaign ID: Optional (Uses default if empty)', 'simple-fundraiser' ); ?></li>
-						<li><?php esc_html_e( 'Phone & Anonymous: Optional', 'simple-fundraiser' ); ?></li>
-					</ul>
-
-					<p class="submit">
-						<input type="submit" name="sf_import_submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Import Donations', 'simple-fundraiser' ); ?>">
-					</p>
-				</form>
+			<p class="submit">
+				<input type="submit" name="sf_import_submit" id="submit" class="button button-primary" value="<?php esc_attr_e( 'Import Donations', 'simple-fundraiser' ); ?>">
+			</p>
+		</form>
+		
+		<script>
+		jQuery(document).ready(function($) {
+			var baseUrl = '<?php echo esc_url( admin_url( 'admin-post.php?action=sf_download_sample' ) ); ?>';
+			
+			$('#sf_default_campaign').on('change', function() {
+				var campaignId = $(this).val();
+				var downloadLink = baseUrl;
 				
-				<script>
-				jQuery(document).ready(function($) {
-					var baseUrl = '<?php echo esc_url( admin_url( 'admin-post.php?action=sf_download_sample' ) ); ?>';
-					
-					$('#sf_default_campaign').on('change', function() {
-						var campaignId = $(this).val();
-						var downloadLink = baseUrl;
-						
-						if (campaignId) {
-							downloadLink += '&campaign_id=' + campaignId;
-						}
-						
-						$('#sf_download_sample').attr('href', downloadLink);
-					});
-				});
-				</script>
-			</div>
-		</div>
+				if (campaignId) {
+					downloadLink += '&campaign_id=' + campaignId;
+				}
+				
+				$('#sf_download_sample').attr('href', downloadLink);
+			});
+		});
+		</script>
 		<?php
 	}
 
@@ -301,6 +304,14 @@ class SF_Import {
 			$phone       = sanitize_text_field( $get_col('phone') );
 			$anon_val    = strtolower( trim( $get_col('anonymous') ) );
 			$csv_id      = isset( $header_map['id'] ) ? intval( $get_col('id') ) : 0;
+
+			// Default Donation Type Fallback
+			if ( empty( $type ) && $camp_id ) {
+				$default_type = get_post_meta( $camp_id, '_sf_default_donation_type', true );
+				if ( $default_type ) {
+					$type = $default_type;
+				}
+			}
 
 			if ( $amount <= 0 ) {
 				$errors[] = sprintf( __( 'Row %d: Invalid amount (%s)', 'simple-fundraiser' ), $row, $raw_amount );

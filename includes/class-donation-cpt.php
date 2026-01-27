@@ -212,7 +212,6 @@ class SF_Donation_CPT {
 			'sf_campaign_id'  => '_sf_campaign_id',
 			'sf_amount'       => '_sf_amount',
 			'sf_date'         => '_sf_date',
-			'sf_donation_type'=> '_sf_donation_type',
 			'sf_donor_name'   => '_sf_donor_name',
 			'sf_donor_email'  => '_sf_donor_email',
 			'sf_donor_phone'  => '_sf_donor_phone',
@@ -223,6 +222,19 @@ class SF_Donation_CPT {
 				update_post_meta( $post_id, $meta_key, sanitize_text_field( $_POST[ $field ] ) );
 			}
 		}
+
+		// Handle Donation Type with Default Fallback
+		$type = isset( $_POST['sf_donation_type'] ) ? sanitize_text_field( $_POST['sf_donation_type'] ) : '';
+		if ( empty( $type ) ) {
+			$campaign_id = isset( $_POST['sf_campaign_id'] ) ? intval( $_POST['sf_campaign_id'] ) : 0;
+			if ( $campaign_id ) {
+				$default_type = get_post_meta( $campaign_id, '_sf_default_donation_type', true );
+				if ( $default_type ) {
+					$type = $default_type;
+				}
+			}
+		}
+		update_post_meta( $post_id, '_sf_donation_type', $type );
 
 		// Handle message textarea
 		if ( isset( $_POST['sf_message'] ) ) {

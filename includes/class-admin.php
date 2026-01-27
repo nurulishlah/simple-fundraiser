@@ -137,17 +137,45 @@ class SF_Admin {
 	 * Render settings page
 	 */
 	public function render_settings_page() {
+		$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'general';
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Simple Fundraiser Settings', 'simple-fundraiser' ); ?></h1>
 			
-			<form method="post" action="options.php">
+			<h2 class="nav-tab-wrapper">
+				<a href="?post_type=sf_campaign&page=sf_settings&tab=general" class="nav-tab <?php echo $active_tab == 'general' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'General', 'simple-fundraiser' ); ?></a>
+				<a href="?post_type=sf_campaign&page=sf_settings&tab=import" class="nav-tab <?php echo $active_tab == 'import' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Import', 'simple-fundraiser' ); ?></a>
+				<a href="?post_type=sf_campaign&page=sf_settings&tab=export" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Export', 'simple-fundraiser' ); ?></a>
+			</h2>
+			
+			<div class="sf-tab-content" style="margin-top: 20px;">
 				<?php
-				settings_fields( 'sf_settings_group' );
-				do_settings_sections( 'sf_settings' );
-				submit_button();
+				switch ( $active_tab ) {
+					case 'import':
+						$import = new SF_Import();
+						$import->render_content();
+						break;
+						
+					case 'export':
+						$export = new SF_Export();
+						$export->render_content();
+						break;
+						
+					case 'general':
+					default:
+						?>
+						<form method="post" action="options.php">
+							<?php
+							settings_fields( 'sf_settings_group' );
+							do_settings_sections( 'sf_settings' );
+							submit_button();
+							?>
+						</form>
+						<?php
+						break;
+				}
 				?>
-			</form>
+			</div>
 		</div>
 		<?php
 	}

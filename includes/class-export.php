@@ -16,7 +16,7 @@ class SF_Export {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'add_export_menu' ) );
+		// add_action( 'admin_menu', array( $this, 'add_export_menu' ) ); // Moved to Settings tab
 		add_action( 'admin_init', array( $this, 'handle_export' ) );
 	}
 
@@ -30,14 +30,14 @@ class SF_Export {
 			__( 'Export', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_export',
-			array( $this, 'render_export_page' )
+			array( $this, 'render_content' )
 		);
 	}
 
 	/**
-	 * Render export page
+	 * Render content (for Settings tab)
 	 */
-	public function render_export_page() {
+	public function render_content() {
 		$campaigns = get_posts( array(
 			'post_type'      => 'sf_campaign',
 			'posts_per_page' => -1,
@@ -47,7 +47,7 @@ class SF_Export {
 		) );
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Export Donations', 'simple-fundraiser' ); ?></h1>
+			<!-- Title handled by tabs -->
 			
 			<form method="post" action="">
 				<?php wp_nonce_field( 'sf_export', 'sf_export_nonce' ); ?>

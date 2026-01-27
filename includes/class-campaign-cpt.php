@@ -159,7 +159,24 @@ class SF_Campaign_CPT {
 				<th><label for="sf_donation_types"><?php esc_html_e( 'Donation Types / Categories', 'simple-fundraiser' ); ?></label></th>
 				<td>
 					<textarea id="sf_donation_types" name="sf_donation_types" rows="4" class="large-text code"><?php echo esc_textarea( get_post_meta( $post->ID, '_sf_donation_types', true ) ); ?></textarea>
-					<p class="description"><?php esc_html_e( 'Enter allowed donation types, one per line (optional). e.g., "Sembako", "Kegiatan"', 'simple-fundraiser' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Enter allowed donation types, one per line. e.g., "Sembako", "Kegiatan"', 'simple-fundraiser' ); ?></p>
+					
+					<?php
+					$types_raw = get_post_meta( $post->ID, '_sf_donation_types', true );
+					$types = $types_raw ? array_map( 'trim', explode( "\n", $types_raw ) ) : array();
+					$types = array_filter( $types );
+					$default_type = get_post_meta( $post->ID, '_sf_default_donation_type', true );
+					?>
+					<div style="margin-top: 10px;">
+						<label for="sf_default_donation_type"><strong><?php esc_html_e( 'Default Type:', 'simple-fundraiser' ); ?></strong></label>
+						<select name="sf_default_donation_type" id="sf_default_donation_type">
+							<option value=""><?php esc_html_e( '-- None --', 'simple-fundraiser' ); ?></option>
+							<?php foreach ( $types as $type ) : ?>
+								<option value="<?php echo esc_attr( $type ); ?>" <?php selected( $default_type, $type ); ?>><?php echo esc_html( $type ); ?></option>
+							<?php endforeach; ?>
+						</select>
+						<span class="description"><?php esc_html_e( 'Used when no type is selected during import or manual entry (Save to update list).', 'simple-fundraiser' ); ?></span>
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -226,6 +243,7 @@ class SF_Campaign_CPT {
 			'sf_account_holder' => '_sf_account_holder',
 			'sf_contact_info'   => '_sf_contact_info',
 			'sf_donation_types' => '_sf_donation_types',
+			'sf_default_donation_type' => '_sf_default_donation_type',
 			'sf_qris_image'     => '_sf_qris_image',
 		);
 
