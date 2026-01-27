@@ -222,14 +222,26 @@ msgid "Donor"
 msgstr "Donatur"
 
 #: includes/class-admin.php:24
-msgid "Fundraiser Settings"
-msgstr "Pengaturan Penggalangan Dana"
+msgid "Fundraiser Stats"
+msgstr "Statistik Penggalangan"
 
 #: includes/class-admin.php:25
+msgid "Stats"
+msgstr "Statistik"
+
+#: includes/class-admin.php:32
+msgid "Fundraiser Settings"
+msgstr "Pengaturan Penggalangan"
+
+#: includes/class-admin.php:33
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: includes/class-admin.php:38
+#: includes/class-admin.php:40
+msgid "Fundraiser Stats"
+msgstr "Statistik Penggalangan"
+
+#: includes/class-admin.php:48
 msgid "Currency Settings"
 msgstr "Pengaturan Mata Uang"
 

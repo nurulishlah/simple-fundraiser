@@ -27,12 +27,47 @@ class SF_Admin {
 	public function add_admin_menu() {
 		add_submenu_page(
 			'edit.php?post_type=sf_campaign',
+			__( 'Fundraiser Stats', 'simple-fundraiser' ),
+			__( 'Stats', 'simple-fundraiser' ),
+			'manage_options',
+			'sf_stats',
+			array( $this, 'render_stats_page' )
+		);
+
+		add_submenu_page(
+			'edit.php?post_type=sf_campaign',
 			__( 'Fundraiser Settings', 'simple-fundraiser' ),
 			__( 'Settings', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_settings',
 			array( $this, 'render_settings_page' )
 		);
+	}
+
+	/**
+	 * Render stats page
+	 */
+	public function render_stats_page() {
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Fundraiser Stats', 'simple-fundraiser' ); ?></h1>
+			
+			<h2 style="margin-top: 20px;"><?php esc_html_e( 'Quick Stats', 'simple-fundraiser' ); ?></h2>
+			<?php $this->render_stats(); ?>
+			
+			<h2><?php esc_html_e( 'Information', 'simple-fundraiser' ); ?></h2>
+			<table class="form-table">
+				<tr>
+					<th><?php esc_html_e( 'Archive Page URL', 'simple-fundraiser' ); ?></th>
+					<td><code><?php echo esc_url( get_post_type_archive_link( 'sf_campaign' ) ); ?></code></td>
+				</tr>
+				<tr>
+					<th><?php esc_html_e( 'Plugin Version', 'simple-fundraiser' ); ?></th>
+					<td><?php echo esc_html( SF_VERSION ); ?></td>
+				</tr>
+			</table>
+		</div>
+		<?php
 	}
 
 	/**
@@ -113,23 +148,6 @@ class SF_Admin {
 				submit_button();
 				?>
 			</form>
-			
-			<hr style="margin: 30px 0;">
-			
-			<h2><?php esc_html_e( 'Quick Stats', 'simple-fundraiser' ); ?></h2>
-			<?php $this->render_stats(); ?>
-			
-			<h2><?php esc_html_e( 'Information', 'simple-fundraiser' ); ?></h2>
-			<table class="form-table">
-				<tr>
-					<th><?php esc_html_e( 'Archive Page URL', 'simple-fundraiser' ); ?></th>
-					<td><code><?php echo esc_url( get_post_type_archive_link( 'sf_campaign' ) ); ?></code></td>
-				</tr>
-				<tr>
-					<th><?php esc_html_e( 'Plugin Version', 'simple-fundraiser' ); ?></th>
-					<td><?php echo esc_html( SF_VERSION ); ?></td>
-				</tr>
-			</table>
 		</div>
 		<?php
 	}
