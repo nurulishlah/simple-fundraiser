@@ -185,7 +185,32 @@ class SF_Import {
 		$default_campaign_id = isset( $_POST['sf_default_campaign'] ) ? intval( $_POST['sf_default_campaign'] ) : 0;
 		$file = $_FILES['sf_import_file']['tmp_name'];
 		$filename = $_FILES['sf_import_file']['name'];
-		$ext = strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
+
+		// Secure File Upload Check
+		$file_info = wp_check_filetype_and_ext( $file, $filename );
+		$ext       = strtolower( $file_info['ext'] );
+		$type      = $file_info['type'];
+		
+		$allowed_mimes = array( 
+			'csv'  => 'text/csv', 
+			'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+		);
+
+		// Fallback for CSV mime types which can vary
+		if ( 'csv' === $ext && empty( $type ) ) {
+			// Check if it's really a text file
+			$finfo = finfo_open( FILEINFO_MIME_TYPE );
+			$real_mime = finfo_file( $finfo, $file );
+			finfo_close( $finfo );
+			if ( in_array( $real_mime, array( 'text/plain', 'text/csv', 'text/x-csv', 'application/vnd.ms-excel', 'application/csv' ) ) ) {
+				$type = 'text/csv';
+			}
+		}
+
+		if ( ! in_array( $ext, array( 'csv', 'xlsx' ) ) || empty( $type ) ) {
+			echo '<div class="notice notice-error"><p>' . esc_html__( 'Invalid file type. Please upload a valid CSV or Excel file.', 'simple-fundraiser' ) . '</p></div>';
+			return;
+		}
 
 		$row_count = 0;
 		$success_count = 0;
