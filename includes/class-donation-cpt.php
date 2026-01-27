@@ -115,6 +115,20 @@ class SF_Donation_CPT {
 				</td>
 			</tr>
 			<tr>
+				<th><label for="sf_donation_type"><?php esc_html_e( 'Donation Type', 'simple-fundraiser' ); ?></label></th>
+				<td>
+					<select id="sf_donation_type" name="sf_donation_type" class="regular-text">
+						<option value=""><?php esc_html_e( '— Select Type —', 'simple-fundraiser' ); ?></option>
+						<?php 
+						$type = get_post_meta( $post->ID, '_sf_donation_type', true );
+						if ( $type ) {
+							echo '<option value="' . esc_attr( $type ) . '" selected>' . esc_html( $type ) . '</option>';
+						}
+						?>
+					</select>
+				</td>
+			</tr>
+			<tr>
 				<th><label for="sf_amount"><?php esc_html_e( 'Amount (Rp)', 'simple-fundraiser' ); ?></label></th>
 				<td>
 					<input type="number" id="sf_amount" name="sf_amount" value="<?php echo esc_attr( $amount ); ?>" class="regular-text" min="0" step="1" required>
@@ -198,6 +212,7 @@ class SF_Donation_CPT {
 			'sf_campaign_id'  => '_sf_campaign_id',
 			'sf_amount'       => '_sf_amount',
 			'sf_date'         => '_sf_date',
+			'sf_donation_type'=> '_sf_donation_type',
 			'sf_donor_name'   => '_sf_donor_name',
 			'sf_donor_email'  => '_sf_donor_email',
 			'sf_donor_phone'  => '_sf_donor_phone',

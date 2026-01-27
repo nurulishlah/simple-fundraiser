@@ -156,6 +156,13 @@ class SF_Campaign_CPT {
 				</td>
 			</tr>
 			<tr>
+				<th><label for="sf_donation_types"><?php esc_html_e( 'Donation Types / Categories', 'simple-fundraiser' ); ?></label></th>
+				<td>
+					<textarea id="sf_donation_types" name="sf_donation_types" rows="4" class="large-text code"><?php echo esc_textarea( get_post_meta( $post->ID, '_sf_donation_types', true ) ); ?></textarea>
+					<p class="description"><?php esc_html_e( 'Enter allowed donation types, one per line (optional). e.g., "Sembako", "Kegiatan"', 'simple-fundraiser' ); ?></p>
+				</td>
+			</tr>
+			<tr>
 				<th><label for="sf_qris_image"><?php esc_html_e( 'QRIS Image', 'simple-fundraiser' ); ?></label></th>
 				<td>
 					<div class="sf-qris-preview">
@@ -218,12 +225,19 @@ class SF_Campaign_CPT {
 			'sf_account_number' => '_sf_account_number',
 			'sf_account_holder' => '_sf_account_holder',
 			'sf_contact_info'   => '_sf_contact_info',
+			'sf_donation_types' => '_sf_donation_types',
 			'sf_qris_image'     => '_sf_qris_image',
 		);
 
 		foreach ( $fields as $field => $meta_key ) {
 			if ( isset( $_POST[ $field ] ) ) {
-				update_post_meta( $post_id, $meta_key, sanitize_text_field( $_POST[ $field ] ) );
+				$val = $_POST[ $field ];
+				if ( 'sf_donation_types' === $field ) {
+					$val = sanitize_textarea_field( $val );
+				} else {
+					$val = sanitize_text_field( $val );
+				}
+				update_post_meta( $post_id, $meta_key, $val );
 			}
 		}
 	}

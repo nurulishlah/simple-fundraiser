@@ -71,6 +71,12 @@ get_header();
 												} else {
 													echo esc_html( $donor_name ? $donor_name : __( 'Someone', 'simple-fundraiser' ) );
 												}
+												
+												// Show donation type if exists
+												$d_type = get_post_meta( $donation->ID, '_sf_donation_type', true );
+												if ( $d_type ) {
+													echo ' <span class="sf-donation-type-badge">' . esc_html( $d_type ) . '</span>';
+												}
 												?>
 											</strong>
 											<span class="sf-donation-amount"><?php echo esc_html( sf_format_currency( $amount ) ); ?></span>
@@ -82,6 +88,18 @@ get_header();
 									</li>
 								<?php endforeach; ?>
 							</ul>
+							<style>
+								.sf-donation-type-badge {
+									display: inline-block;
+									background: #e9ecef;
+									color: #666;
+									font-size: 0.75rem;
+									padding: 2px 6px;
+									border-radius: 4px;
+									margin-left: 5px;
+									vertical-align: middle;
+								}
+							</style>
 						<?php else : ?>
 							<p class="sf-no-donations"><?php esc_html_e( 'Be the first to donate!', 'simple-fundraiser' ); ?></p>
 						<?php endif; ?>
@@ -128,6 +146,74 @@ get_header();
 								<?php endif; ?>
 							</div>
 						</div>
+						
+						<?php
+						// Calculate breakdown
+						$type_totals = array();
+						$donations = get_posts( array(
+							'post_type'      => 'sf_donation',
+							'posts_per_page' => -1,
+							'post_status'    => 'publish',
+							'meta_query'     => array(
+								array(
+									'key'   => '_sf_campaign_id',
+									'value' => get_the_ID(),
+								),
+							),
+							'fields'         => 'ids',
+						) );
+						
+						foreach ( $donations as $donation_id ) {
+							$d_amount = get_post_meta( $donation_id, '_sf_amount', true );
+							$d_type = get_post_meta( $donation_id, '_sf_donation_type', true );
+							if ( $d_type ) {
+								if ( ! isset( $type_totals[ $d_type ] ) ) {
+									$type_totals[ $d_type ] = 0;
+								}
+								$type_totals[ $d_type ] += floatval( $d_amount );
+							}
+						}
+						
+						if ( ! empty( $type_totals ) ) :
+						?>
+							<div class="sf-breakdown">
+								<?php foreach ( $type_totals as $type_name => $type_amount ) : ?>
+									<div class="sf-breakdown-item">
+										<span class="sf-breakdown-label"><?php echo esc_html( $type_name ); ?></span>
+										<span class="sf-breakdown-value"><?php echo esc_html( sf_format_currency( $type_amount ) ); ?></span>
+									</div>
+								<?php endforeach; ?>
+							</div>
+							<style>
+								.sf-breakdown {
+									background: #f8f9fa;
+									border-radius: 8px;
+									padding: 15px;
+									margin-top: 20px;
+									font-size: 0.9rem;
+								}
+								.sf-breakdown-item {
+									display: flex;
+									justify-content: space-between;
+									margin-bottom: 5px;
+									padding-bottom: 5px;
+									border-bottom: 1px solid #e9ecef;
+								}
+								.sf-breakdown-item:last-child {
+									margin-bottom: 0;
+									padding-bottom: 0;
+									border-bottom: none;
+								}
+								.sf-breakdown-label {
+									color: #666;
+									font-weight: 500;
+								}
+								.sf-breakdown-value {
+									color: #1a1a2e;
+									font-weight: 600;
+								}
+							</style>
+						<?php endif; ?>
 					</div>
 					
 					<!-- Payment Info -->

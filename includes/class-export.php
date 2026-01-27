@@ -152,34 +152,48 @@ class SF_Export {
 		$output = fopen( 'php://output', 'w' );
 
 		// CSV header
-		fputcsv( $output, array(
+		// Headers
+		$headers = array(
 			__( 'ID', 'simple-fundraiser' ),
-			__( 'Campaign', 'simple-fundraiser' ),
-			__( 'Amount', 'simple-fundraiser' ),
+			__( 'Date', 'simple-fundraiser' ),
 			__( 'Donor Name', 'simple-fundraiser' ),
 			__( 'Email', 'simple-fundraiser' ),
 			__( 'Phone', 'simple-fundraiser' ),
+			__( 'Amount', 'simple-fundraiser' ),
+			__( 'Campaign', 'simple-fundraiser' ),
+			__( 'Donation Type', 'simple-fundraiser' ),
 			__( 'Message', 'simple-fundraiser' ),
 			__( 'Anonymous', 'simple-fundraiser' ),
-			__( 'Date', 'simple-fundraiser' ),
-		) );
-
-		// CSV rows
+		);
+		
+		fputcsv( $output, $headers );
+		
+		// Data
 		foreach ( $donations as $donation ) {
 			$campaign_id = get_post_meta( $donation->ID, '_sf_campaign_id', true );
-			$campaign_title = $campaign_id ? get_the_title( $campaign_id ) : '';
+			$amount = get_post_meta( $donation->ID, '_sf_amount', true );
+			$donor_name = get_post_meta( $donation->ID, '_sf_donor_name', true );
+			$donor_email = get_post_meta( $donation->ID, '_sf_donor_email', true );
+			$donor_phone = get_post_meta( $donation->ID, '_sf_donor_phone', true );
+			$message = get_post_meta( $donation->ID, '_sf_message', true );
+			$anonymous = get_post_meta( $donation->ID, '_sf_anonymous', true );
+			$date = get_post_meta( $donation->ID, '_sf_date', true );
+			$type = get_post_meta( $donation->ID, '_sf_donation_type', true );
 			
-			fputcsv( $output, array(
+			$row = array(
 				$donation->ID,
-				$campaign_title,
-				get_post_meta( $donation->ID, '_sf_amount', true ),
-				get_post_meta( $donation->ID, '_sf_donor_name', true ),
-				get_post_meta( $donation->ID, '_sf_donor_email', true ),
-				get_post_meta( $donation->ID, '_sf_donor_phone', true ),
-				get_post_meta( $donation->ID, '_sf_message', true ),
-				get_post_meta( $donation->ID, '_sf_anonymous', true ) === '1' ? __( 'Yes', 'simple-fundraiser' ) : __( 'No', 'simple-fundraiser' ),
-				get_post_meta( $donation->ID, '_sf_date', true ),
-			) );
+				$date,
+				$donor_name,
+				$donor_email,
+				$donor_phone,
+				$amount,
+				get_the_title( $campaign_id ),
+				$type,
+				$message,
+				$anonymous === '1' ? __( 'Yes', 'simple-fundraiser' ) : __( 'No', 'simple-fundraiser' ),
+			);
+			
+			fputcsv( $output, $row );
 		}
 
 		fclose( $output );

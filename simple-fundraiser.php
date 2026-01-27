@@ -95,6 +95,28 @@ function sf_admin_scripts( $hook ) {
 			SF_VERSION,
 			true
 		);
+		
+		// Get all campaigns and their types
+		$campaign_types = array();
+		$campaigns = get_posts( array(
+			'post_type'      => 'sf_campaign',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		) );
+		
+		foreach ( $campaigns as $campaign_id ) {
+			$types = get_post_meta( $campaign_id, '_sf_donation_types', true );
+			if ( $types ) {
+				$type_list = array_map( 'trim', explode( "\n", $types ) );
+				$type_list = array_filter( $type_list );
+				$campaign_types[ $campaign_id ] = array_values( $type_list );
+			}
+		}
+		
+		wp_localize_script( 'simple-fundraiser-admin', 'sf_admin_data', array(
+			'campaign_types' => $campaign_types
+		) );
+		
 		wp_enqueue_style(
 			'simple-fundraiser-admin',
 			SF_PLUGIN_URL . 'assets/css/admin.css',

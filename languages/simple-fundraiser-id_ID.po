@@ -93,6 +93,14 @@ msgstr "Pemilik Rekening"
 msgid "Contact (WhatsApp)"
 msgstr "Kontak (WhatsApp)"
 
+#: includes/class-campaign-cpt.php:137
+msgid "Donation Types / Categories"
+msgstr "Jenis / Kategori Donasi"
+
+#: includes/class-campaign-cpt.php:140
+msgid "Enter allowed donation types, one per line (optional). e.g., \"Sembako\", \"Kegiatan\""
+msgstr "Masukkan jenis donasi, satu per baris (opsional). cth: \"Sembako\", \"Kegiatan\""
+
 #: includes/class-campaign-cpt.php:135
 msgid "Number for donors to confirm (starts with country code, e.g. 62)"
 msgstr "Nomor untuk konfirmasi donatur (dimulai dengan kode negara, contoh 62)"
@@ -196,6 +204,14 @@ msgstr "Tanggal"
 #: includes/class-donation-cpt.php:123
 msgid "Donor Name"
 msgstr "Nama Donatur"
+
+#: includes/class-donation-cpt.php:120
+msgid "Donation Type"
+msgstr "Jenis Donasi"
+
+#: includes/class-donation-cpt.php:122
+msgid "— Select Type —"
+msgstr "— Pilih Jenis —"
 
 #: includes/class-donation-cpt.php:129
 msgid "Email"
