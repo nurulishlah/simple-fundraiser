@@ -201,6 +201,34 @@ msgstr "Jumlah (Rp)"
 msgid "Date"
 msgstr "Tanggal"
 
+#: templates/single-sf_campaign.php:123
+msgid "Sort by:"
+msgstr "Urutkan:"
+
+#: templates/single-sf_campaign.php:125
+msgid "Newest"
+msgstr "Terbaru"
+
+#: templates/single-sf_campaign.php:126
+msgid "Oldest"
+msgstr "Terlama"
+
+#: templates/single-sf_campaign.php:127
+msgid "Highest Amount"
+msgstr "Terbanyak"
+
+#: templates/single-sf_campaign.php:128
+msgid "Lowest Amount"
+msgstr "Terkecil"
+
+#: templates/single-sf_campaign.php:180
+msgid "&laquo; Prev"
+msgstr "&laquo; Sebelumnya"
+
+#: templates/single-sf_campaign.php:181
+msgid "Next &raquo;"
+msgstr "Selanjutnya &raquo;"
+
 #: includes/class-donation-cpt.php:123
 msgid "Donor Name"
 msgstr "Nama Donatur"

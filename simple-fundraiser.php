@@ -29,6 +29,7 @@ require_once SF_PLUGIN_DIR . 'includes/class-campaign-cpt.php';
 require_once SF_PLUGIN_DIR . 'includes/class-donation-cpt.php';
 require_once SF_PLUGIN_DIR . 'includes/class-admin.php';
 require_once SF_PLUGIN_DIR . 'includes/class-export.php';
+require_once SF_PLUGIN_DIR . 'includes/class-ajax.php';
 
 /**
  * Initialize the plugin
@@ -42,6 +43,7 @@ function sf_init() {
 	new SF_Donation_CPT();
 	new SF_Admin();
 	new SF_Export();
+	new SF_Ajax();
 }
 add_action( 'plugins_loaded', 'sf_init' );
 
@@ -73,12 +75,27 @@ register_deactivation_hook( __FILE__, 'sf_deactivate' );
  * Enqueue frontend styles
  */
 function sf_enqueue_scripts() {
+	$version = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : SF_VERSION;
+
 	wp_enqueue_style(
 		'simple-fundraiser',
 		SF_PLUGIN_URL . 'assets/css/frontend.css',
 		array(),
-		SF_VERSION
+		$version
 	);
+
+	wp_enqueue_script(
+		'simple-fundraiser-frontend',
+		SF_PLUGIN_URL . 'assets/js/frontend.js',
+		array( 'jquery' ),
+		$version,
+		true
+	);
+
+	wp_localize_script( 'simple-fundraiser-frontend', 'sf_ajax_obj', array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'nonce'    => wp_create_nonce( 'sf_nonce' ),
+	) );
 }
 add_action( 'wp_enqueue_scripts', 'sf_enqueue_scripts' );
 
