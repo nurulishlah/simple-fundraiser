@@ -153,8 +153,6 @@ get_header();
 							<p class="sf-no-donations"><?php esc_html_e( 'Be the first to donate!', 'simple-fundraiser' ); ?></p>
 						<?php endif; ?>
 					</div>
-					
-					</div>
 				</div>
 				
 				<aside class="sf-single-sidebar">
