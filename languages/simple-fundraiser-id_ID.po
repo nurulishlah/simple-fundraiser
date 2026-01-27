@@ -1,0 +1,474 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Simple Fundraiser 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/nurulishlah/simple-fundraiser/issues\n"
+"POT-Creation-Date: 2026-01-27 15:00+0700\n"
+"PO-Revision-Date: 2026-01-27 15:00+0700\n"
+"Last-Translator: Nurul Ishlah <nurul@example.com>\n"
+"Language-Team: Indonesian <id_ID@example.com>\n"
+"Language: id_ID\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Manual\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: includes/class-campaign-cpt.php:26
+msgid "Campaigns"
+msgstr "Kampanye"
+
+#: includes/class-campaign-cpt.php:27
+msgid "Campaign"
+msgstr "Kampanye"
+
+#: includes/class-campaign-cpt.php:28
+msgid "Fundraiser"
+msgstr "Penggalangan Dana"
+
+#: includes/class-campaign-cpt.php:29
+msgid "Add Campaign"
+msgstr "Tambah Kampanye"
+
+#: includes/class-campaign-cpt.php:30
+msgid "Add New Campaign"
+msgstr "Tambah Kampanye Baru"
+
+#: includes/class-campaign-cpt.php:31
+msgid "Edit Campaign"
+msgstr "Edit Kampanye"
+
+#: includes/class-campaign-cpt.php:32
+msgid "New Campaign"
+msgstr "Kampanye Baru"
+
+#: includes/class-campaign-cpt.php:33
+msgid "View Campaign"
+msgstr "Lihat Kampanye"
+
+#: includes/class-campaign-cpt.php:34
+msgid "Search Campaigns"
+msgstr "Cari Kampanye"
+
+#: includes/class-campaign-cpt.php:35
+msgid "No campaigns found"
+msgstr "Tidak ada kampanye ditemukan"
+
+#: includes/class-campaign-cpt.php:36
+msgid "No campaigns found in trash"
+msgstr "Tidak ada kampanye di tempat sampah"
+
+#: includes/class-campaign-cpt.php:65
+msgid "Campaign Details"
+msgstr "Detail Kampanye"
+
+#: includes/class-campaign-cpt.php:73
+msgid "Payment Information"
+msgstr "Informasi Pembayaran"
+
+#: includes/class-campaign-cpt.php:81
+msgid "Campaign Progress"
+msgstr "Progres Kampanye"
+
+#: includes/class-campaign-cpt.php:94
+msgid "Goal Amount (Rp)"
+msgstr "Target Jumlah (Rp)"
+
+#: includes/class-campaign-cpt.php:100
+msgid "Deadline"
+msgstr "Batas Waktu"
+
+#: includes/class-campaign-cpt.php:114
+msgid "Bank Name"
+msgstr "Nama Bank"
+
+#: includes/class-campaign-cpt.php:120
+msgid "Account Number"
+msgstr "Nomor Rekening"
+
+#: includes/class-campaign-cpt.php:126
+msgid "Account Holder"
+msgstr "Pemilik Rekening"
+
+#: includes/class-campaign-cpt.php:132
+msgid "Contact (WhatsApp)"
+msgstr "Kontak (WhatsApp)"
+
+#: includes/class-campaign-cpt.php:135
+msgid "Number for donors to confirm (starts with country code, e.g. 62)"
+msgstr "Nomor untuk konfirmasi donatur (dimulai dengan kode negara, contoh 62)"
+
+#: includes/class-campaign-cpt.php:139
+msgid "QRIS Image"
+msgstr "Gambar QRIS"
+
+#: includes/class-campaign-cpt.php:147
+msgid "Upload QRIS"
+msgstr "Unggah QRIS"
+
+#: includes/class-campaign-cpt.php:148
+msgid "Remove"
+msgstr "Hapus"
+
+#: includes/class-campaign-cpt.php:164
+msgid "Raised:"
+msgstr "Terkumpul:"
+
+#: includes/class-campaign-cpt.php:165
+msgid "Goal:"
+msgstr "Target:"
+
+#: includes/class-campaign-cpt.php:169
+msgid "complete"
+msgstr "selesai"
+
+#: includes/class-campaign-cpt.php:215
+msgid "Goal"
+msgstr "Target"
+
+#: includes/class-campaign-cpt.php:216
+msgid "Raised"
+msgstr "Terkumpul"
+
+#: includes/class-campaign-cpt.php:217
+msgid "Progress"
+msgstr "Progres"
+
+#: includes/class-donation-cpt.php:26
+msgid "Donations"
+msgstr "Donasi"
+
+#: includes/class-donation-cpt.php:27
+msgid "Donation"
+msgstr "Donasi"
+
+#: includes/class-donation-cpt.php:29
+msgid "Add Donation"
+msgstr "Tambah Donasi"
+
+#: includes/class-donation-cpt.php:30
+msgid "Add New Donation"
+msgstr "Tambah Donasi Baru"
+
+#: includes/class-donation-cpt.php:31
+msgid "Edit Donation"
+msgstr "Edit Donasi"
+
+#: includes/class-donation-cpt.php:32
+msgid "New Donation"
+msgstr "Donasi Baru"
+
+#: includes/class-donation-cpt.php:33
+msgid "View Donation"
+msgstr "Lihat Donasi"
+
+#: includes/class-donation-cpt.php:34
+msgid "Search Donations"
+msgstr "Cari Donasi"
+
+#: includes/class-donation-cpt.php:35
+msgid "No donations found"
+msgstr "Tidak ada donasi ditemukan"
+
+#: includes/class-donation-cpt.php:36
+msgid "No donations found in trash"
+msgstr "Tidak ada donasi di tempat sampah"
+
+#: includes/class-donation-cpt.php:61
+msgid "Donation Details"
+msgstr "Detail Donasi"
+
+#: includes/class-donation-cpt.php:69
+msgid "Donor Information"
+msgstr "Informasi Donatur"
+
+#: includes/class-donation-cpt.php:97
+msgid "— Select Campaign —"
+msgstr "— Pilih Kampanye —"
+
+#: includes/class-donation-cpt.php:104
+msgid "Amount (Rp)"
+msgstr "Jumlah (Rp)"
+
+#: includes/class-donation-cpt.php:110
+msgid "Date"
+msgstr "Tanggal"
+
+#: includes/class-donation-cpt.php:123
+msgid "Donor Name"
+msgstr "Nama Donatur"
+
+#: includes/class-donation-cpt.php:129
+msgid "Email"
+msgstr "Email"
+
+#: includes/class-donation-cpt.php:135
+msgid "Phone"
+msgstr "Telepon"
+
+#: includes/class-donation-cpt.php:141
+msgid "Message"
+msgstr "Pesan"
+
+#: includes/class-donation-cpt.php:147
+msgid "Anonymous"
+msgstr "Hamba Allah"
+
+#: includes/class-donation-cpt.php:151
+msgid "Hide donor name on frontend"
+msgstr "Sembunyikan nama donatur di depan"
+
+#: includes/class-donation-cpt.php:200
+msgid "Donor"
+msgstr "Donatur"
+
+#: includes/class-admin.php:24
+msgid "Fundraiser Settings"
+msgstr "Pengaturan Penggalangan Dana"
+
+#: includes/class-admin.php:25
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: includes/class-admin.php:38
+msgid "Currency Settings"
+msgstr "Pengaturan Mata Uang"
+
+#: includes/class-admin.php:45
+msgid "Currency Symbol"
+msgstr "Simbol Mata Uang"
+
+#: includes/class-admin.php:54
+msgid "Currency Position"
+msgstr "Posisi Mata Uang"
+
+#: includes/class-admin.php:60
+msgid "Before Amount (Rp 100)"
+msgstr "Sebelum Angka (Rp 100)"
+
+#: includes/class-admin.php:60
+msgid "After Amount (100 Rp)"
+msgstr "Setelah Angka (100 Rp)"
+
+#: includes/class-admin.php:67
+msgid "Thousand Separator"
+msgstr "Pemisah Ribuan"
+
+#: includes/class-admin.php:76
+msgid "Decimal Separator"
+msgstr "Pemisah Desimal"
+
+#: includes/class-admin.php:85
+msgid "Number of Decimals"
+msgstr "Jumlah Desimal"
+
+#: includes/class-admin.php:101
+msgid "Simple Fundraiser Settings"
+msgstr "Pengaturan Simple Fundraiser"
+
+#: includes/class-admin.php:102
+msgid "Configure your fundraising plugin settings here."
+msgstr "Konfigurasikan pengaturan plugin penggalangan dana Anda di sini."
+
+#: includes/class-admin.php:114
+msgid "Quick Stats"
+msgstr "Statistik Cepat"
+
+#: includes/class-admin.php:117
+msgid "Information"
+msgstr "Informasi"
+
+#: includes/class-admin.php:120
+msgid "Archive Page URL"
+msgstr "URL Halaman Arsip"
+
+#: includes/class-admin.php:124
+msgid "Plugin Version"
+msgstr "Versi Plugin"
+
+#: includes/class-admin.php:150
+msgid "Active Campaigns"
+msgstr "Kampanye Aktif"
+
+#: includes/class-admin.php:154
+msgid "Total Donations"
+msgstr "Total Donasi"
+
+#: includes/class-admin.php:158
+msgid "Total Raised"
+msgstr "Total Terkumpul"
+
+#: includes/class-admin.php:170
+msgid "Fundraiser Overview"
+msgstr "Ringkasan Penggalangan Dana"
+
+#: includes/class-admin.php:185
+msgid "No campaigns yet."
+msgstr "Belum ada kampanye."
+
+#: includes/class-admin.php:206
+msgid "View All Campaigns"
+msgstr "Lihat Semua Kampanye"
+
+#: includes/class-export.php:24
+msgid "Export Donations"
+msgstr "Ekspor Donasi"
+
+#: includes/class-export.php:25
+msgid "Export"
+msgstr "Ekspor"
+
+#: includes/class-export.php:44
+msgid "All Campaigns"
+msgstr "Semua Kampanye"
+
+#: includes/class-export.php:54
+msgid "Date From"
+msgstr "Dari Tanggal"
+
+#: includes/class-export.php:60
+msgid "Date To"
+msgstr "Sampai Tanggal"
+
+#: includes/class-export.php:66
+msgid "Download CSV"
+msgstr "Unduh CSV"
+
+#: includes/class-export.php:137
+msgid "ID"
+msgstr "ID"
+
+#: includes/class-export.php:162
+msgid "Yes"
+msgstr "Ya"
+
+#: includes/class-export.php:162
+msgid "No"
+msgstr "Tidak"
+
+#: templates/archive-sf_campaign.php:12
+msgid "Fundraising Campaigns"
+msgstr "Kampanye Penggalangan Dana"
+
+#: templates/archive-sf_campaign.php:13
+msgid "Support our causes and help us make a difference."
+msgstr "Dukung tujuan kami dan bantu kami membuat perubahan."
+
+#: templates/archive-sf_campaign.php:44
+msgid "of"
+msgstr "dari"
+
+#: templates/archive-sf_campaign.php:61
+msgid "%d days left"
+msgstr "%d hari lagi"
+
+#: templates/archive-sf_campaign.php:64
+msgid "Last day!"
+msgstr "Hari terakhir!"
+
+#: templates/archive-sf_campaign.php:66
+msgid "Campaign ended"
+msgstr "Kampanye berakhir"
+
+#: templates/archive-sf_campaign.php:73
+msgid "Donate Now"
+msgstr "Donasi Sekarang"
+
+#: templates/archive-sf_campaign.php:82
+msgid "&laquo; Previous"
+msgstr "&laquo; Sebelumnya"
+
+#: templates/archive-sf_campaign.php:83
+msgid "Next &raquo;"
+msgstr "Selanjutnya &raquo;"
+
+#: templates/archive-sf_campaign.php:87
+msgid "No campaigns found. Check back soon!"
+msgstr "Tidak ada kampanye ditemukan. Cek kembali nanti!"
+
+#: templates/single-sf_campaign.php:38
+msgid "Recent Donations"
+msgstr "Donasi Terbaru"
+
+#: templates/single-sf_campaign.php:69
+msgid "Someone"
+msgstr "Hamba Allah"
+
+#: templates/single-sf_campaign.php:83
+msgid "Be the first to donate!"
+msgstr "Jadilah yang pertama berdonasi!"
+
+#: templates/single-sf_campaign.php:97
+msgid "raised of"
+msgstr "terkumpul dari"
+
+#: templates/single-sf_campaign.php:97
+msgid "goal"
+msgstr "target"
+
+#: templates/single-sf_campaign.php:108
+msgid "Campaign Started"
+msgstr "Kampanye Dimulai"
+
+#: templates/single-sf_campaign.php:123
+msgid "Ended"
+msgstr "Berakhir"
+
+#: templates/single-sf_campaign.php:133
+msgid "How to Donate"
+msgstr "Cara Berdonasi"
+
+#: templates/single-sf_campaign.php:137
+msgid "Scan QRIS"
+msgstr "Scan QRIS"
+
+#: templates/single-sf_campaign.php:139
+msgid "QRIS Code"
+msgstr "Kode QRIS"
+
+#: templates/single-sf_campaign.php:145
+msgid "Bank Transfer"
+msgstr "Transfer Bank"
+
+#: templates/single-sf_campaign.php:148
+msgid "Bank"
+msgstr "Bank"
+
+#: templates/single-sf_campaign.php:152
+msgid "Account No."
+msgstr "No. Rek"
+
+#: templates/single-sf_campaign.php:156
+msgid "Holder"
+msgstr "Pemilik"
+
+#: templates/single-sf_campaign.php:162
+msgid "After transferring, please contact us to confirm your donation."
+msgstr "Setelah transfer, mohon hubungi kami untuk konfirmasi donasi Anda."
+
+#: templates/single-sf_campaign.php:169
+msgid "Hello, I want to confirm my donation for %s."
+msgstr "Halo, saya ingin konfirmasi donasi untuk %s."
+
+#: templates/single-sf_campaign.php:176
+msgid "Confirm Donation"
+msgstr "Konfirmasi Donasi"
+
+#: templates/single-sf_campaign.php:200
+msgid "Share This Campaign"
+msgstr "Bagikan Kampanye Ini"
+
+#: templates/single-sf_campaign.php:204
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: templates/single-sf_campaign.php:208
+msgid "Facebook"
+msgstr "Facebook"
+
+#: templates/single-sf_campaign.php:212
+msgid "Twitter"
+msgstr "Twitter"
+
+#: templates/single-sf_campaign.php:220
+msgid "Back to All Campaigns"
+msgstr "Kembali ke Semua Kampanye"

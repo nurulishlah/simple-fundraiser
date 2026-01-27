@@ -17,6 +17,7 @@ class SF_Admin {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widget' ) );
 	}
 
@@ -35,13 +36,85 @@ class SF_Admin {
 	}
 
 	/**
+	 * Register settings
+	 */
+	public function register_settings() {
+		register_setting( 'sf_settings_group', 'sf_currency_options' );
+		
+		add_settings_section(
+			'sf_currency_section',
+			__( 'Currency Settings', 'simple-fundraiser' ),
+			null,
+			'sf_settings'
+		);
+		
+		add_settings_field(
+			'sf_currency_symbol',
+			__( 'Currency Symbol', 'simple-fundraiser' ),
+			array( $this, 'render_text_field' ),
+			'sf_settings',
+			'sf_currency_section',
+			array( 'field' => 'symbol', 'default' => 'Rp' )
+		);
+		
+		add_settings_field(
+			'sf_currency_position',
+			__( 'Currency Position', 'simple-fundraiser' ),
+			array( $this, 'render_select_field' ),
+			'sf_settings',
+			'sf_currency_section',
+			array( 
+				'field' => 'position', 
+				'options' => array( 'before' => __( 'Before Amount (Rp 100)', 'simple-fundraiser' ), 'after' => __( 'After Amount (100 Rp)', 'simple-fundraiser' ) ),
+				'default' => 'before'
+			)
+		);
+		
+		add_settings_field(
+			'sf_thousand_separator',
+			__( 'Thousand Separator', 'simple-fundraiser' ),
+			array( $this, 'render_text_field' ),
+			'sf_settings',
+			'sf_currency_section',
+			array( 'field' => 'thousand_sep', 'default' => '.' )
+		);
+		
+		add_settings_field(
+			'sf_decimal_separator',
+			__( 'Decimal Separator', 'simple-fundraiser' ),
+			array( $this, 'render_text_field' ),
+			'sf_settings',
+			'sf_currency_section',
+			array( 'field' => 'decimal_sep', 'default' => ',' )
+		);
+		
+		add_settings_field(
+			'sf_decimals',
+			__( 'Number of Decimals', 'simple-fundraiser' ),
+			array( $this, 'render_number_field' ),
+			'sf_settings',
+			'sf_currency_section',
+			array( 'field' => 'decimals', 'default' => 0 )
+		);
+	}
+
+	/**
 	 * Render settings page
 	 */
 	public function render_settings_page() {
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Simple Fundraiser Settings', 'simple-fundraiser' ); ?></h1>
-			<p><?php esc_html_e( 'Configure your fundraising plugin settings here.', 'simple-fundraiser' ); ?></p>
+			
+			<form method="post" action="options.php">
+				<?php
+				settings_fields( 'sf_settings_group' );
+				do_settings_sections( 'sf_settings' );
+				submit_button();
+				?>
+			</form>
+			
+			<hr style="margin: 30px 0;">
 			
 			<h2><?php esc_html_e( 'Quick Stats', 'simple-fundraiser' ); ?></h2>
 			<?php $this->render_stats(); ?>
@@ -96,6 +169,37 @@ class SF_Admin {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Render text field
+	 */
+	public function render_text_field( $args ) {
+		$options = get_option( 'sf_currency_options' );
+		$value = isset( $options[ $args['field'] ] ) ? $options[ $args['field'] ] : $args['default'];
+		echo '<input type="text" name="sf_currency_options[' . esc_attr( $args['field'] ) . ']" value="' . esc_attr( $value ) . '" class="regular-text">';
+	}
+
+	/**
+	 * Render number field
+	 */
+	public function render_number_field( $args ) {
+		$options = get_option( 'sf_currency_options' );
+		$value = isset( $options[ $args['field'] ] ) ? $options[ $args['field'] ] : $args['default'];
+		echo '<input type="number" name="sf_currency_options[' . esc_attr( $args['field'] ) . ']" value="' . esc_attr( $value ) . '" class="small-text" min="0">';
+	}
+
+	/**
+	 * Render select field
+	 */
+	public function render_select_field( $args ) {
+		$options = get_option( 'sf_currency_options' );
+		$value = isset( $options[ $args['field'] ] ) ? $options[ $args['field'] ] : $args['default'];
+		echo '<select name="sf_currency_options[' . esc_attr( $args['field'] ) . ']">';
+		foreach ( $args['options'] as $key => $label ) {
+			echo '<option value="' . esc_attr( $key ) . '" ' . selected( $value, $key, false ) . '>' . esc_html( $label ) . '</option>';
+		}
+		echo '</select>';
 	}
 
 	/**

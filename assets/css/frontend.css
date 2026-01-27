@@ -231,12 +231,34 @@
 .sf-progress-meta {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 10px;
     font-size: 0.9rem;
 }
 
+.sf-campaign-dates {
+    text-align: right;
+}
+
+.sf-date-start {
+    display: block;
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 2px;
+}
+
+.sf-date-start .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 2px;
+}
+
 .sf-days-left {
+    display: block;
     color: #e74c3c;
+    font-weight: 500;
 }
 
 /* Payment Card */

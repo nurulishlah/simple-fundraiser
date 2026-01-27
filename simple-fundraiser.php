@@ -159,7 +159,21 @@ function sf_get_campaign_progress( $campaign_id ) {
  * @return string Formatted amount
  */
 function sf_format_currency( $amount ) {
-	return 'Rp ' . number_format( floatval( $amount ), 0, ',', '.' );
+	$options = get_option( 'sf_currency_options' );
+	
+	$symbol = isset( $options['symbol'] ) ? $options['symbol'] : 'Rp';
+	$position = isset( $options['position'] ) ? $options['position'] : 'before';
+	$thousand_sep = isset( $options['thousand_sep'] ) ? $options['thousand_sep'] : '.';
+	$decimal_sep = isset( $options['decimal_sep'] ) ? $options['decimal_sep'] : ',';
+	$decimals = isset( $options['decimals'] ) ? intval( $options['decimals'] ) : 0;
+	
+	$formatted = number_format( floatval( $amount ), $decimals, $decimal_sep, $thousand_sep );
+	
+	if ( 'after' === $position ) {
+		return $formatted . ' ' . $symbol;
+	} else {
+		return $symbol . ' ' . $formatted;
+	}
 }
 
 /**

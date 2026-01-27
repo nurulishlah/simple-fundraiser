@@ -102,23 +102,31 @@ get_header();
 						
 						<div class="sf-progress-meta">
 							<span class="sf-progress-percent"><?php echo esc_html( round( $progress, 1 ) ); ?>%</span>
-							<?php if ( $deadline ) : 
-								$deadline_date = strtotime( $deadline );
-								$days_left = ceil( ( $deadline_date - time() ) / 86400 );
-							?>
-								<span class="sf-days-left">
-									<?php 
-									if ( $days_left > 0 ) {
-										/* translators: %d: number of days */
-										printf( esc_html__( '%d days left', 'simple-fundraiser' ), $days_left );
-									} elseif ( $days_left === 0 ) {
-										esc_html_e( 'Last day!', 'simple-fundraiser' );
-									} else {
-										esc_html_e( 'Ended', 'simple-fundraiser' );
-									}
-									?>
+							
+							<div class="sf-campaign-dates">
+								<span class="sf-date-start" title="<?php esc_attr_e( 'Campaign Started', 'simple-fundraiser' ); ?>">
+									<span class="dashicons dashicons-calendar-alt"></span>
+									<?php echo esc_html( get_the_date() ); ?>
 								</span>
-							<?php endif; ?>
+								
+								<?php if ( $deadline ) : 
+									$deadline_date = strtotime( $deadline );
+									$days_left = ceil( ( $deadline_date - time() ) / 86400 );
+								?>
+									<span class="sf-days-left">
+										<?php 
+										if ( $days_left > 0 ) {
+											/* translators: %d: number of days */
+											printf( esc_html__( '%d days left', 'simple-fundraiser' ), $days_left );
+										} elseif ( $days_left === 0 ) {
+											esc_html_e( 'Last day!', 'simple-fundraiser' );
+										} else {
+											esc_html_e( 'Ended', 'simple-fundraiser' );
+										}
+										?>
+									</span>
+								<?php endif; ?>
+							</div>
 						</div>
 					</div>
 					
