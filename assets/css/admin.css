@@ -1,0 +1,22 @@
+/**
+ * Simple Fundraiser - Admin Styles
+ */
+
+.sf-progress-box {
+    padding: 10px 0;
+}
+
+.sf-qris-preview {
+    margin-bottom: 10px;
+}
+
+.sf-qris-preview img {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    background: #fff;
+}
+
+.sf-stats-grid h3 {
+    font-size: 2rem;
+}
