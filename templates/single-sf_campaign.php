@@ -8,7 +8,6 @@
 get_header();
 ?>
 
-<div class="sf-wrap">
 	<div class="sf-container">
 		<?php while ( have_posts() ) : the_post(); 
 			$goal = get_post_meta( get_the_ID(), '_sf_goal', true );
@@ -312,7 +311,6 @@ get_header();
 			&larr; <?php esc_html_e( 'Back to All Campaigns', 'simple-fundraiser' ); ?>
 		</a>
 	</div>
-</div>
 
 <?php
 get_footer();

@@ -8,7 +8,6 @@
 get_header();
 ?>
 
-<div class="sf-wrap">
 	<div class="sf-container">
 		<header class="sf-archive-header">
 			<h1 class="sf-archive-title"><?php esc_html_e( 'Fundraising Campaigns', 'simple-fundraiser' ); ?></h1>
@@ -88,7 +87,6 @@ get_header();
 			<p class="sf-no-campaigns"><?php esc_html_e( 'No campaigns found. Check back soon!', 'simple-fundraiser' ); ?></p>
 		<?php endif; ?>
 	</div>
-</div>
 
 <?php
 get_footer();

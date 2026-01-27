@@ -3,12 +3,6 @@
  */
 
 /* Container */
-.sf-wrap {
-    padding: 40px 20px;
-    background: #f8f9fa;
-    min-height: 60vh;
-}
-
 .sf-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -44,6 +38,7 @@
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 
@@ -177,6 +172,8 @@
     background: #fff;
     padding: 30px;
     border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .sf-single-image {
@@ -209,6 +206,8 @@
     padding: 25px;
     border-radius: 12px;
     margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .sf-progress-card {
