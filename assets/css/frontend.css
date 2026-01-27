@@ -485,30 +485,46 @@
 }
 
 .sf-pagination {
-    display: flex;
-    justify-content: center;
-    gap: 5px;
     margin-top: 20px;
     padding-top: 15px;
     border-top: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: center;
 }
 
-.sf-pagination .page-numbers {
+.sf-pagination ul.page-numbers {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sf-pagination ul.page-numbers li {
+    margin: 0;
+    padding: 0;
+}
+
+.sf-pagination a.page-numbers,
+.sf-pagination span.page-numbers {
+    display: block;
     padding: 5px 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     text-decoration: none;
     color: #666;
     font-size: 0.9rem;
+    line-height: normal;
 }
 
-.sf-pagination .page-numbers.current {
+.sf-pagination span.page-numbers.current {
     background: #16a085;
     color: white;
     border-color: #16a085;
 }
 
-.sf-pagination .page-numbers:hover:not(.current) {
+.sf-pagination a.page-numbers:hover {
     background: #f8f9fa;
     border-color: #ccc;
 }

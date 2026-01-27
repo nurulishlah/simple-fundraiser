@@ -144,6 +144,7 @@ get_header();
 									'total'     => $donations_query->max_num_pages,
 									'prev_text' => __( '&laquo; Prev', 'simple-fundraiser' ),
 									'next_text' => __( 'Next &raquo;', 'simple-fundraiser' ),
+									'type'      => 'list',
 									'add_args'  => array( 'sf_sort' => $sort ),
 								) );
 								?>
