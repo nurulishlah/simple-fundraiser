@@ -155,6 +155,17 @@
     color: #fff;
 }
 
+.sf-campaign-donors {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.sf-campaign-donors .dashicons {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
 /* Single Campaign */
 .sf-single-campaign {
     display: grid;

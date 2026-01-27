@@ -168,7 +168,7 @@ class SF_Widget_Renderer {
 	 */
 	private static function render_featured_grid( $campaigns, $settings ) {
 		?>
-		<div class="sf-widget-grid">
+		<div class="sf-campaigns-grid">
 			<?php foreach ( $campaigns as $campaign ) : ?>
 				<?php self::render_campaign_card( $campaign, $settings ); ?>
 			<?php endforeach; ?>
@@ -316,48 +316,85 @@ class SF_Widget_Renderer {
 	}
 
 	/**
-	 * Render a single campaign card
+	 * Render a single campaign card (reuses archive page styles)
 	 *
 	 * @param WP_Post $campaign Campaign post object
 	 * @param array   $settings Widget settings
 	 */
 	private static function render_campaign_card( $campaign, $settings ) {
-		$campaign_id = $campaign->ID;
-		$goal        = get_post_meta( $campaign_id, '_sf_goal', true );
-		$total       = sf_get_campaign_total( $campaign_id );
-		$progress    = sf_get_campaign_progress( $campaign_id );
-		$thumbnail   = get_the_post_thumbnail_url( $campaign_id, 'medium_large' );
+		$campaign_id    = $campaign->ID;
+		$goal           = get_post_meta( $campaign_id, '_sf_goal', true );
+		$total          = sf_get_campaign_total( $campaign_id );
+		$progress       = sf_get_campaign_progress( $campaign_id );
+		$deadline       = get_post_meta( $campaign_id, '_sf_deadline', true );
 		$donation_count = self::get_donation_count( $campaign_id );
 		?>
-		<div class="sf-widget-card">
-			<?php if ( $thumbnail ) : ?>
-				<a href="<?php echo get_permalink( $campaign_id ); ?>" class="sf-card-image">
-					<img src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php echo esc_attr( $campaign->post_title ); ?>">
-				</a>
+		<article class="sf-campaign-card">
+			<?php if ( has_post_thumbnail( $campaign_id ) ) : ?>
+				<div class="sf-campaign-image">
+					<a href="<?php echo get_permalink( $campaign_id ); ?>">
+						<?php echo get_the_post_thumbnail( $campaign_id, 'medium_large' ); ?>
+					</a>
+				</div>
 			<?php endif; ?>
-			<div class="sf-card-content">
-				<h4 class="sf-card-title">
+			
+			<div class="sf-campaign-content">
+				<h2 class="sf-campaign-title">
 					<a href="<?php echo get_permalink( $campaign_id ); ?>"><?php echo esc_html( $campaign->post_title ); ?></a>
-				</h4>
+				</h2>
 				
 				<?php if ( $settings['show_progress_bar'] ) : ?>
-					<div class="sf-card-progress">
-						<div class="sf-card-progress-bar" style="width: <?php echo esc_attr( $progress ); ?>%"></div>
+					<div class="sf-campaign-progress">
+						<div class="sf-progress-bar">
+							<div class="sf-progress-fill" style="width: <?php echo esc_attr( $progress ); ?>%;"></div>
+						</div>
+						<div class="sf-progress-stats">
+							<span class="sf-raised"><?php echo esc_html( sf_format_currency( $total ) ); ?></span>
+							<?php if ( $settings['show_goal'] && $goal ) : ?>
+								<span class="sf-goal"><?php esc_html_e( 'of', 'simple-fundraiser' ); ?> <?php echo esc_html( sf_format_currency( $goal ) ); ?></span>
+							<?php endif; ?>
+						</div>
+						<div class="sf-progress-percent">
+							<strong><?php echo esc_html( round( $progress, 1 ) ); ?>%</strong>
+						</div>
+					</div>
+				<?php endif; ?>
+				
+				<?php if ( $deadline ) : ?>
+					<div class="sf-campaign-deadline">
+						<span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span>
+						<?php 
+						$deadline_date = strtotime( $deadline );
+						$now = time();
+						$days_left = ceil( ( $deadline_date - $now ) / 86400 );
+						
+						if ( $days_left > 0 ) {
+							/* translators: %d: number of days */
+							printf( esc_html__( '%d days left', 'simple-fundraiser' ), $days_left );
+						} elseif ( $days_left === 0 ) {
+							esc_html_e( 'Last day!', 'simple-fundraiser' );
+						} else {
+							esc_html_e( 'Campaign ended', 'simple-fundraiser' );
+						}
+						?>
 					</div>
 				<?php endif; ?>
 
-				<div class="sf-card-meta">
-					<?php if ( $settings['show_goal'] && $goal ) : ?>
-						<span class="sf-card-amount"><?php echo sf_format_currency( $total ); ?> / <?php echo sf_format_currency( $goal ); ?></span>
-					<?php else : ?>
-						<span class="sf-card-amount"><?php echo sf_format_currency( $total ); ?></span>
-					<?php endif; ?>
-					<?php if ( $settings['show_donation_count'] ) : ?>
-						<span class="sf-card-donors"><?php echo absint( $donation_count ); ?> <?php esc_html_e( 'donors', 'simple-fundraiser' ); ?></span>
-					<?php endif; ?>
-				</div>
+				<?php if ( $settings['show_donation_count'] ) : ?>
+					<div class="sf-campaign-donors">
+						<span class="dashicons dashicons-groups" aria-hidden="true"></span>
+						<?php 
+						/* translators: %d: number of donors */
+						printf( esc_html__( '%d donors', 'simple-fundraiser' ), absint( $donation_count ) ); 
+						?>
+					</div>
+				<?php endif; ?>
+				
+				<a href="<?php echo get_permalink( $campaign_id ); ?>" class="sf-campaign-button">
+					<?php esc_html_e( 'Donate Now', 'simple-fundraiser' ); ?>
+				</a>
 			</div>
-		</div>
+		</article>
 		<?php
 	}
 
