@@ -233,6 +233,8 @@ class SF_Import {
 						$header_map['phone'] = $index;
 					} elseif ( strpos( $col_name, 'anonymous' ) !== false || strpos( $col_name, 'hamba allah' ) !== false ) {
 						$header_map['anonymous'] = $index;
+					} elseif ( $col_name === 'id' || $col_name === 'donation id' ) {
+						$header_map['id'] = $index;
 					}
 				}
 				
@@ -298,6 +300,7 @@ class SF_Import {
 			$type        = sanitize_text_field( $get_col('type') );
 			$phone       = sanitize_text_field( $get_col('phone') );
 			$anon_val    = strtolower( trim( $get_col('anonymous') ) );
+			$csv_id      = isset( $header_map['id'] ) ? intval( $get_col('id') ) : 0;
 
 			if ( $amount <= 0 ) {
 				$errors[] = sprintf( __( 'Row %d: Invalid amount (%s)', 'simple-fundraiser' ), $row, $raw_amount );
@@ -306,6 +309,12 @@ class SF_Import {
 
 			if ( ! $camp_id ) {
 				$errors[] = sprintf( __( 'Row %d: Missing Campaign ID', 'simple-fundraiser' ), $row );
+				continue;
+			}
+
+			// Duplicate Check (ID based)
+			if ( $csv_id > 0 && get_post( $csv_id ) ) {
+				$errors[] = sprintf( __( 'Row %d: Duplicate skipped (ID %d already exists)', 'simple-fundraiser' ), $row, $csv_id );
 				continue;
 			}
 
