@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Simple Fundraiser 1.1.0\n"
+"Project-Id-Version: Simple Fundraiser 1.3.0\n"
 "Report-Msgid-Bugs-To: https://github.com/nurulishlah/simple-fundraiser/issues\n"
 "POT-Creation-Date: 2026-01-27 15:00+0700\n"
 "PO-Revision-Date: 2026-01-27 15:00+0700\n"
@@ -98,8 +98,8 @@ msgid "Donation Types / Categories"
 msgstr "Jenis / Kategori Donasi"
 
 #: includes/class-campaign-cpt.php:140
-msgid "Enter allowed donation types, one per line (optional). e.g., \"Sembako\", \"Kegiatan\""
-msgstr "Masukkan jenis donasi, satu per baris (opsional). cth: \"Sembako\", \"Kegiatan\""
+msgid "Enter allowed donation types, one per line. e.g., \"Sembako\", \"Kegiatan\""
+msgstr "Masukkan jenis donasi, satu per baris. cth: \"Sembako\", \"Kegiatan\""
 
 #: includes/class-campaign-cpt.php:135
 msgid "Number for donors to confirm (starts with country code, e.g. 62)"
@@ -497,34 +497,98 @@ msgstr "No. Rek"
 msgid "Holder"
 msgstr "Pemilik"
 
-#: templates/single-sf_campaign.php:162
+#: templates/single-sf_campaign.php:160
 msgid "After transferring, please contact us to confirm your donation."
 msgstr "Setelah transfer, mohon hubungi kami untuk konfirmasi donasi Anda."
 
-#: templates/single-sf_campaign.php:169
+#: templates/single-sf_campaign.php:167
 msgid "Hello, I want to confirm my donation for %s."
 msgstr "Halo, saya ingin konfirmasi donasi untuk %s."
 
-#: templates/single-sf_campaign.php:176
+#: templates/single-sf_campaign.php:174
 msgid "Confirm Donation"
 msgstr "Konfirmasi Donasi"
 
-#: templates/single-sf_campaign.php:200
+#: templates/single-sf_campaign.php:198
 msgid "Share This Campaign"
 msgstr "Bagikan Kampanye Ini"
 
-#: templates/single-sf_campaign.php:204
+#: templates/single-sf_campaign.php:202
 msgid "WhatsApp"
 msgstr "WhatsApp"
 
-#: templates/single-sf_campaign.php:208
+#: templates/single-sf_campaign.php:206
 msgid "Facebook"
 msgstr "Facebook"
 
-#: templates/single-sf_campaign.php:212
+#: templates/single-sf_campaign.php:210
 msgid "Twitter"
 msgstr "Twitter"
 
-#: templates/single-sf_campaign.php:220
+#: templates/single-sf_campaign.php:218
 msgid "Back to All Campaigns"
 msgstr "Kembali ke Semua Kampanye"
+
+#: includes/class-admin.php:143
+msgid "General"
+msgstr "Umum"
+
+#: includes/class-admin.php:144 includes/class-import.php:29
+msgid "Import"
+msgstr "Impor"
+
+#: includes/class-admin.php:145 includes/class-export.php:25
+msgid "Export"
+msgstr "Ekspor"
+
+#: includes/class-import.php:97
+msgid "Default Campaign"
+msgstr "Kampanye Default"
+
+#: includes/class-import.php:98
+msgid "Assign to this campaign if \"Campaign ID\" column is empty in CSV."
+msgstr "Tetapkan ke kampanye ini jika kolom \"Campaign ID\" kosong di CSV."
+
+#: includes/class-import.php:102
+msgid "-- Select Campaign --"
+msgstr "-- Pilih Kampanye --"
+
+#: includes/class-import.php:112
+msgid "Download Sample CSV"
+msgstr "Unduh Contoh CSV"
+
+#: includes/class-import.php:118
+msgid "CSV File"
+msgstr "File CSV"
+
+#: includes/class-import.php:124
+msgid "CSV Format Guide"
+msgstr "Panduan Format CSV"
+
+#: includes/class-import.php:125
+msgid "Your CSV should follow this structure:"
+msgstr "CSV Anda harus mengikuti struktur ini:"
+
+#: includes/class-import.php:130
+msgid "Date format: YYYY-MM-DD"
+msgstr "Format tanggal: YYYY-MM-DD"
+
+#: includes/class-import.php:131
+msgid "Campaign ID: Optional (Uses default if empty)"
+msgstr "Campaign ID: Opsional (Gunakan default jika kosong)"
+
+#: includes/class-import.php:132
+msgid "Phone & Anonymous: Optional"
+msgstr "Telepon & Hamba Allah: Opsional"
+
+#: includes/class-campaign-cpt.php:171
+msgid "Default Type:"
+msgstr "Tipe Default:"
+
+#: includes/class-campaign-cpt.php:173
+msgid "-- None --"
+msgstr "-- Tidak Ada --"
+
+#: includes/class-campaign-cpt.php:178
+msgid "Used when no type is selected during import or manual entry (Save to update list)."
+msgstr "Digunakan saat tidak ada tipe yang dipilih saat impor atau entri manual (Simpan untuk memperbarui daftar)."
