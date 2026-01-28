@@ -100,7 +100,27 @@ class SF_Campaigns_Widget extends WP_Widget {
 			</select>
 		</p>
 
-		<p>
+		<!-- Campaign selector for Hero Spotlight -->
+		<p class="sf-field-campaign-id" style="<?php echo $instance['layout'] !== 'hero-spotlight' ? 'display:none;' : ''; ?>">
+			<label for="<?php echo esc_attr( $this->get_field_id( 'campaign_id' ) ); ?>">
+				<?php esc_html_e( 'Select Campaign:', 'simple-fundraiser' ); ?>
+			</label>
+			<select 
+				class="widefat" 
+				id="<?php echo esc_attr( $this->get_field_id( 'campaign_id' ) ); ?>" 
+				name="<?php echo esc_attr( $this->get_field_name( 'campaign_id' ) ); ?>"
+			>
+				<?php foreach ( SF_Widget_Renderer::get_campaign_options() as $id => $title ) : ?>
+					<option value="<?php echo esc_attr( $id ); ?>" <?php selected( $instance['campaign_id'], $id ); ?>>
+						<?php echo esc_html( $title ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
+			<small><?php esc_html_e( 'Leave empty to show most recent campaign.', 'simple-fundraiser' ); ?></small>
+		</p>
+
+		<!-- Fields hidden for Hero Spotlight -->
+		<p class="sf-field-count" style="<?php echo $instance['layout'] === 'hero-spotlight' ? 'display:none;' : ''; ?>">
 			<label for="<?php echo esc_attr( $this->get_field_id( 'count' ) ); ?>">
 				<?php esc_html_e( 'Number of Campaigns:', 'simple-fundraiser' ); ?>
 			</label>
@@ -116,7 +136,7 @@ class SF_Campaigns_Widget extends WP_Widget {
 			>
 		</p>
 
-		<p>
+		<p class="sf-field-order-by" style="<?php echo $instance['layout'] === 'hero-spotlight' ? 'display:none;' : ''; ?>">
 			<label for="<?php echo esc_attr( $this->get_field_id( 'order_by' ) ); ?>">
 				<?php esc_html_e( 'Order By:', 'simple-fundraiser' ); ?>
 			</label>
@@ -133,7 +153,7 @@ class SF_Campaigns_Widget extends WP_Widget {
 			</select>
 		</p>
 
-		<p>
+		<p class="sf-field-status" style="<?php echo $instance['layout'] === 'hero-spotlight' ? 'display:none;' : ''; ?>">
 			<label for="<?php echo esc_attr( $this->get_field_id( 'status' ) ); ?>">
 				<?php esc_html_e( 'Status Filter:', 'simple-fundraiser' ); ?>
 			</label>
@@ -232,6 +252,7 @@ class SF_Campaigns_Widget extends WP_Widget {
 		$instance['count']              = absint( $new_instance['count'] ?? 3 );
 		$instance['order_by']           = sanitize_key( $new_instance['order_by'] ?? 'newest' );
 		$instance['status']             = sanitize_key( $new_instance['status'] ?? 'active' );
+		$instance['campaign_id']        = absint( $new_instance['campaign_id'] ?? 0 );
 		$instance['show_progress_bar']  = ! empty( $new_instance['show_progress_bar'] );
 		$instance['show_goal']          = ! empty( $new_instance['show_goal'] );
 		$instance['show_donation_count']= ! empty( $new_instance['show_donation_count'] );
@@ -270,3 +291,24 @@ function sf_register_campaigns_widget() {
 	register_widget( 'SF_Campaigns_Widget' );
 }
 add_action( 'widgets_init', 'sf_register_campaigns_widget' );
+
+/**
+ * Enqueue widget admin scripts
+ */
+function sf_enqueue_widget_admin_scripts( $hook ) {
+	// Only load on widgets page and customizer
+	if ( 'widgets.php' !== $hook && 'customize.php' !== $hook ) {
+		return;
+	}
+
+	$version = defined( 'WP_DEBUG' ) && WP_DEBUG ? time() : SF_VERSION;
+
+	wp_enqueue_script(
+		'sf-widget-admin',
+		SF_PLUGIN_URL . 'assets/js/widget-admin.js',
+		array( 'jquery' ),
+		$version,
+		true
+	);
+}
+add_action( 'admin_enqueue_scripts', 'sf_enqueue_widget_admin_scripts' );

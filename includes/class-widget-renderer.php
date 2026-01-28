@@ -26,6 +26,7 @@ class SF_Widget_Renderer {
 		'show_donation_count'=> false,
 		'show_nav_arrows'    => true,
 		'status'             => 'active',
+		'campaign_id'        => 0, // For Hero Spotlight - specific campaign
 		'custom_class'       => '',
 	);
 
@@ -36,6 +37,28 @@ class SF_Widget_Renderer {
 	 */
 	public static function get_defaults() {
 		return self::$defaults;
+	}
+
+	/**
+	 * Get available campaigns for dropdown
+	 *
+	 * @return array Campaign ID => Title pairs
+	 */
+	public static function get_campaign_options() {
+		$campaigns = get_posts( array(
+			'post_type'      => 'sf_campaign',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		) );
+
+		$options = array( 0 => __( '— Select Campaign —', 'simple-fundraiser' ) );
+		foreach ( $campaigns as $campaign ) {
+			$options[ $campaign->ID ] = $campaign->post_title;
+		}
+
+		return $options;
 	}
 
 	/**
@@ -94,9 +117,20 @@ class SF_Widget_Renderer {
 	 * @return array Campaign posts
 	 */
 	public static function get_campaigns( $settings ) {
+		// For Hero Spotlight with specific campaign selected
+		if ( 'hero-spotlight' === $settings['layout'] && ! empty( $settings['campaign_id'] ) ) {
+			$campaign = get_post( absint( $settings['campaign_id'] ) );
+			if ( $campaign && 'sf_campaign' === $campaign->post_type && 'publish' === $campaign->post_status ) {
+				return array( $campaign );
+			}
+		}
+
+		// For Hero Spotlight, only get 1 campaign
+		$count = ( 'hero-spotlight' === $settings['layout'] ) ? 1 : absint( $settings['count'] );
+
 		$args = array(
 			'post_type'      => 'sf_campaign',
-			'posts_per_page' => absint( $settings['count'] ),
+			'posts_per_page' => $count,
 			'post_status'    => 'publish',
 		);
 

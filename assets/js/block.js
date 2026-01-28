@@ -65,7 +65,20 @@
                                 setAttributes({ layout: value });
                             }
                         }),
-                        el(RangeControl, {
+                        // Show campaign selector only for Hero Spotlight
+                        attributes.layout === 'hero-spotlight' && el(SelectControl, {
+                            label: __('Select Campaign', 'simple-fundraiser'),
+                            value: attributes.campaignId,
+                            options: Object.entries(sfBlockData.campaignOptions).map(function (entry) {
+                                return { value: entry[0], label: entry[1] };
+                            }),
+                            onChange: function (value) {
+                                setAttributes({ campaignId: parseInt(value) });
+                            },
+                            help: __('Leave empty to show most recent.', 'simple-fundraiser')
+                        }),
+                        // Hide Count, OrderBy, Status for Hero Spotlight
+                        attributes.layout !== 'hero-spotlight' && el(RangeControl, {
                             label: __('Number of Campaigns', 'simple-fundraiser'),
                             value: attributes.count,
                             onChange: function (value) {
@@ -74,7 +87,7 @@
                             min: 1,
                             max: 12
                         }),
-                        el(SelectControl, {
+                        attributes.layout !== 'hero-spotlight' && el(SelectControl, {
                             label: __('Order By', 'simple-fundraiser'),
                             value: attributes.orderBy,
                             options: sfBlockData.orderOptions,
@@ -82,7 +95,7 @@
                                 setAttributes({ orderBy: value });
                             }
                         }),
-                        el(SelectControl, {
+                        attributes.layout !== 'hero-spotlight' && el(SelectControl, {
                             label: __('Status Filter', 'simple-fundraiser'),
                             value: attributes.status,
                             options: sfBlockData.statusOptions,
@@ -116,7 +129,8 @@
                                 setAttributes({ showDonationCount: value });
                             }
                         }),
-                        el(ToggleControl, {
+                        // Only show nav arrows toggle for carousel layout
+                        attributes.layout === 'carousel' && el(ToggleControl, {
                             label: __('Show Carousel Navigation Arrows', 'simple-fundraiser'),
                             checked: attributes.showNavArrows,
                             onChange: function (value) {

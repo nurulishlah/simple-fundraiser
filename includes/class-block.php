@@ -68,6 +68,10 @@ class SF_Campaigns_Block {
 					'type'    => 'string',
 					'default' => 'active',
 				),
+				'campaignId' => array(
+					'type'    => 'number',
+					'default' => 0,
+				),
 				'customClass' => array(
 					'type'    => 'string',
 					'default' => '',
@@ -117,6 +121,7 @@ class SF_Campaigns_Block {
 				array( 'value' => 'completed', 'label' => __( 'Completed Only', 'simple-fundraiser' ) ),
 				array( 'value' => 'all', 'label' => __( 'All', 'simple-fundraiser' ) ),
 			),
+			'campaignOptions' => SF_Widget_Renderer::get_campaign_options(),
 		) );
 	}
 
@@ -138,6 +143,7 @@ class SF_Campaigns_Block {
 			'show_donation_count' => $attributes['showDonationCount'] ?? false,
 			'show_nav_arrows'     => $attributes['showNavArrows'] ?? true,
 			'status'              => $attributes['status'] ?? 'active',
+			'campaign_id'         => $attributes['campaignId'] ?? 0,
 			'custom_class'        => $attributes['customClass'] ?? '',
 		);
 
