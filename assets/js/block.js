@@ -115,6 +115,13 @@
                             onChange: function (value) {
                                 setAttributes({ showDonationCount: value });
                             }
+                        }),
+                        el(ToggleControl, {
+                            label: __('Show Carousel Navigation Arrows', 'simple-fundraiser'),
+                            checked: attributes.showNavArrows,
+                            onChange: function (value) {
+                                setAttributes({ showNavArrows: value });
+                            }
                         })
                     ),
                     el(PanelBody, {

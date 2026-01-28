@@ -60,6 +60,10 @@ class SF_Campaigns_Block {
 					'type'    => 'boolean',
 					'default' => false,
 				),
+				'showNavArrows' => array(
+					'type'    => 'boolean',
+					'default' => true,
+				),
 				'status' => array(
 					'type'    => 'string',
 					'default' => 'active',
@@ -132,6 +136,7 @@ class SF_Campaigns_Block {
 			'show_progress_bar'   => $attributes['showProgressBar'] ?? true,
 			'show_goal'           => $attributes['showGoal'] ?? true,
 			'show_donation_count' => $attributes['showDonationCount'] ?? false,
+			'show_nav_arrows'     => $attributes['showNavArrows'] ?? true,
 			'status'              => $attributes['status'] ?? 'active',
 			'custom_class'        => $attributes['customClass'] ?? '',
 		);

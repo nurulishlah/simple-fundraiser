@@ -190,6 +190,19 @@ class SF_Campaigns_Widget extends WP_Widget {
 		</p>
 
 		<p>
+			<input 
+				class="checkbox" 
+				type="checkbox" 
+				id="<?php echo esc_attr( $this->get_field_id( 'show_nav_arrows' ) ); ?>" 
+				name="<?php echo esc_attr( $this->get_field_name( 'show_nav_arrows' ) ); ?>"
+				<?php checked( $instance['show_nav_arrows'] ); ?>
+			>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'show_nav_arrows' ) ); ?>">
+				<?php esc_html_e( 'Show Carousel Navigation Arrows', 'simple-fundraiser' ); ?>
+			</label>
+		</p>
+
+		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'custom_class' ) ); ?>">
 				<?php esc_html_e( 'Custom CSS Class:', 'simple-fundraiser' ); ?>
 			</label>
@@ -222,6 +235,7 @@ class SF_Campaigns_Widget extends WP_Widget {
 		$instance['show_progress_bar']  = ! empty( $new_instance['show_progress_bar'] );
 		$instance['show_goal']          = ! empty( $new_instance['show_goal'] );
 		$instance['show_donation_count']= ! empty( $new_instance['show_donation_count'] );
+		$instance['show_nav_arrows']    = ! empty( $new_instance['show_nav_arrows'] );
 		$instance['custom_class']       = sanitize_html_class( $new_instance['custom_class'] ?? '' );
 
 		// Validate layout

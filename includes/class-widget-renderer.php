@@ -24,6 +24,7 @@ class SF_Widget_Renderer {
 		'show_progress_bar'  => true,
 		'show_goal'          => true,
 		'show_donation_count'=> false,
+		'show_nav_arrows'    => true,
 		'status'             => 'active',
 		'custom_class'       => '',
 	);
@@ -183,21 +184,28 @@ class SF_Widget_Renderer {
 	 * @param array $settings  Widget settings
 	 */
 	private static function render_carousel( $campaigns, $settings ) {
+		$show_arrows = ! empty( $settings['show_nav_arrows'] );
 		?>
 		<div class="sf-widget-carousel" data-campaign-count="<?php echo count( $campaigns ); ?>">
-			<button class="sf-carousel-nav sf-carousel-prev" aria-label="<?php esc_attr_e( 'Previous', 'simple-fundraiser' ); ?>">
-				<span class="dashicons dashicons-arrow-left-alt2"></span>
-			</button>
-			<div class="sf-carousel-track">
-				<?php foreach ( $campaigns as $campaign ) : ?>
-					<div class="sf-carousel-slide">
-						<?php self::render_campaign_card( $campaign, $settings ); ?>
-					</div>
-				<?php endforeach; ?>
+			<?php if ( $show_arrows ) : ?>
+				<button class="sf-carousel-nav sf-carousel-prev" aria-label="<?php esc_attr_e( 'Previous', 'simple-fundraiser' ); ?>">
+					<span class="dashicons dashicons-arrow-left-alt2"></span>
+				</button>
+			<?php endif; ?>
+			<div class="sf-carousel-viewport">
+				<div class="sf-carousel-track">
+					<?php foreach ( $campaigns as $campaign ) : ?>
+						<div class="sf-carousel-slide">
+							<?php self::render_campaign_card( $campaign, $settings ); ?>
+						</div>
+					<?php endforeach; ?>
+				</div>
 			</div>
-			<button class="sf-carousel-nav sf-carousel-next" aria-label="<?php esc_attr_e( 'Next', 'simple-fundraiser' ); ?>">
-				<span class="dashicons dashicons-arrow-right-alt2"></span>
-			</button>
+			<?php if ( $show_arrows ) : ?>
+				<button class="sf-carousel-nav sf-carousel-next" aria-label="<?php esc_attr_e( 'Next', 'simple-fundraiser' ); ?>">
+					<span class="dashicons dashicons-arrow-right-alt2"></span>
+				</button>
+			<?php endif; ?>
 			<div class="sf-carousel-dots">
 				<?php for ( $i = 0; $i < count( $campaigns ); $i++ ) : ?>
 					<button class="sf-carousel-dot<?php echo 0 === $i ? ' active' : ''; ?>" data-index="<?php echo $i; ?>"></button>
@@ -264,8 +272,10 @@ class SF_Widget_Renderer {
 		$thumbnail   = get_the_post_thumbnail_url( $campaign_id, 'large' );
 		$excerpt     = get_the_excerpt( $campaign );
 		$donation_count = self::get_donation_count( $campaign_id );
+		
+		$bg_style = $thumbnail ? 'background-image: url(' . esc_url( $thumbnail ) . ');' : '';
 		?>
-		<div class="sf-widget-hero">
+		<div class="sf-widget-hero" style="<?php echo esc_attr( $bg_style ); ?>">
 			<?php if ( $thumbnail ) : ?>
 				<div class="sf-hero-image">
 					<a href="<?php echo get_permalink( $campaign_id ); ?>">
@@ -273,6 +283,7 @@ class SF_Widget_Renderer {
 					</a>
 				</div>
 			<?php endif; ?>
+			<div class="sf-hero-overlay"></div>
 			<div class="sf-hero-content">
 				<h2 class="sf-hero-title">
 					<a href="<?php echo get_permalink( $campaign_id ); ?>"><?php echo esc_html( $campaign->post_title ); ?></a>
