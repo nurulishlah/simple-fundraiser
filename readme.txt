@@ -1,10 +1,10 @@
 === Simple Fundraiser ===
-Contributors: nurulishlah
+Contributors: Muhamad Ishlah
 Tags: fundraising, donation, charity, mosque, infaq
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,6 +16,7 @@ Simple Fundraiser is a lightweight plugin designed to help mosques, charities, a
 
 **Features:**
 *   **Unlimited Campaigns:** Create as many fundraising campaigns as you need.
+*   **Gutenberg Block:** Beautifully designed block with "Featured Grid", "Carousel", and "Hero Spotlight" layouts.
 *   **Manual Donation Entry:** Record offline donations (cash, transfer) manually via the admin dashboard.
 *   **Import Donations:** Bulk import donations via CSV file with smart delimiter detection.
 *   **Progress Bars:** Display beautiful progress bars for each campaign using shortcodes or built-in templates.
@@ -34,6 +35,7 @@ Simple Fundraiser is a lightweight plugin designed to help mosques, charities, a
 2.  Activate the plugin through the 'Plugins' menu in WordPress.
 3.  Go to **Fundraiser > Settings** to configure your currency and payment information.
 4.  Create your first campaign under **Fundraiser > Add Campaign**.
+5.  Use the **Simple Fundraiser** block in Gutenberg editor to display your campaigns.
 
 == Frequently Asked Questions ==
 
@@ -41,7 +43,7 @@ Simple Fundraiser is a lightweight plugin designed to help mosques, charities, a
 Currently, this plugin is designed for manual donation recording (offline donations, transfers confirmed manually). Automatic payment gateway integration is planned for future versions.
 
 = How do I display a campaign? =
-The plugin automatically creates a page for each campaign. You can also view all campaigns at `yourdomain.com/sf_campaign`.
+The plugin automatically creates a page for each campaign. You can also view all campaigns at `yourdomain.com/sf_campaign`. You can also use the **Simple Fundraiser Block** on any page.
 
 = Can I change the currency? =
 Yes! Go to **Fundraiser > Settings** to change the currency symbol (e.g., Rp, $) and formatting.
@@ -54,6 +56,14 @@ Yes! Go to **Fundraiser > Settings** to change the currency symbol (e.g., Rp, $)
 4.  **Donation Entry** - Simple form to record new donations.
 
 == Changelog ==
+
+= 1.4.0 =
+*   New Feature: Dedicated Campaign Widget / Gutenberg Block.
+*   New Feature: Responsive "Hero Spotlight" layout with mobile optimization.
+*   Improvement: Dynamic carousel navigation control.
+*   Improvement: Specific campaign selection for Hero Spotlight layout.
+*   Change: Dropped support for Classic Widgets (Gutenberg Block only).
+*   Change: Removed "Compact List" layout option.
 
 = 1.3.0 =
 *   New Feature: Excel (.xlsx) Import and Export support.
