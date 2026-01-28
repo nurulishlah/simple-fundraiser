@@ -32,7 +32,7 @@ require_once SF_PLUGIN_DIR . 'includes/class-export.php';
 require_once SF_PLUGIN_DIR . 'includes/class-ajax.php';
 require_once SF_PLUGIN_DIR . 'includes/class-import.php';
 require_once SF_PLUGIN_DIR . 'includes/class-widget-renderer.php';
-require_once SF_PLUGIN_DIR . 'includes/class-widget.php';
+
 require_once SF_PLUGIN_DIR . 'includes/class-block.php';
 
 // Excel Libraries

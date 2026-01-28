@@ -93,9 +93,6 @@ class SF_Widget_Renderer {
 				case 'carousel':
 					self::render_carousel( $campaigns, $settings );
 					break;
-				case 'compact-list':
-					self::render_compact_list( $campaigns, $settings );
-					break;
 				case 'hero-spotlight':
 					self::render_hero_spotlight( $campaigns, $settings );
 					break;
@@ -255,41 +252,7 @@ class SF_Widget_Renderer {
 	 * @param array $campaigns Campaign posts
 	 * @param array $settings  Widget settings
 	 */
-	private static function render_compact_list( $campaigns, $settings ) {
-		?>
-		<ul class="sf-widget-list">
-			<?php foreach ( $campaigns as $campaign ) : ?>
-				<?php
-				$campaign_id = $campaign->ID;
-				$goal        = get_post_meta( $campaign_id, '_sf_goal', true );
-				$total       = sf_get_campaign_total( $campaign_id );
-				$progress    = sf_get_campaign_progress( $campaign_id );
-				$thumbnail   = get_the_post_thumbnail_url( $campaign_id, 'thumbnail' );
-				?>
-				<li class="sf-widget-list-item">
-					<?php if ( $thumbnail ) : ?>
-						<a href="<?php echo get_permalink( $campaign_id ); ?>" class="sf-list-thumb">
-							<img src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php echo esc_attr( $campaign->post_title ); ?>">
-						</a>
-					<?php endif; ?>
-					<div class="sf-list-content">
-						<h4 class="sf-list-title">
-							<a href="<?php echo get_permalink( $campaign_id ); ?>"><?php echo esc_html( $campaign->post_title ); ?></a>
-						</h4>
-						<?php if ( $settings['show_progress_bar'] ) : ?>
-							<div class="sf-list-progress">
-								<div class="sf-list-progress-bar" style="width: <?php echo esc_attr( $progress ); ?>%"></div>
-							</div>
-						<?php endif; ?>
-						<?php if ( $settings['show_goal'] && $goal ) : ?>
-							<span class="sf-list-amount"><?php echo sf_format_currency( $total ); ?> / <?php echo sf_format_currency( $goal ); ?></span>
-						<?php endif; ?>
-					</div>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-		<?php
-	}
+
 
 	/**
 	 * Render Hero Spotlight layout (single featured campaign)

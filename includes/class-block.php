@@ -106,7 +106,6 @@ class SF_Campaigns_Block {
 			'layouts' => array(
 				array( 'value' => 'featured-grid', 'label' => __( 'Featured Grid', 'simple-fundraiser' ) ),
 				array( 'value' => 'carousel', 'label' => __( 'Carousel', 'simple-fundraiser' ) ),
-				array( 'value' => 'compact-list', 'label' => __( 'Compact List', 'simple-fundraiser' ) ),
 				array( 'value' => 'hero-spotlight', 'label' => __( 'Hero Spotlight', 'simple-fundraiser' ) ),
 			),
 			'orderOptions' => array(
