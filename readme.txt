@@ -2,9 +2,9 @@
 Contributors: Muhamad Ishlah
 Tags: fundraising, donation, charity, mosque, infaq
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,11 @@ Yes! Go to **Fundraiser > Settings** to change the currency symbol (e.g., Rp, $)
 4.  **Donation Entry** - Simple form to record new donations.
 
 == Changelog ==
+
+= 1.4.1 =
+*   Fix: Removed discouraged `load_plugin_textdomain` function.
+*   Fix: Added sanitization for currency settings.
+*   Update: Bumped "Tested up to" version compatibility.
 
 = 1.4.0 =
 *   New Feature: Dedicated Campaign Widget / Gutenberg Block.
