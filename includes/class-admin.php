@@ -74,7 +74,13 @@ class SF_Admin {
 	 * Register settings
 	 */
 	public function register_settings() {
-		register_setting( 'sf_settings_group', 'sf_currency_options' );
+		register_setting( 
+			'sf_settings_group', 
+			'sf_currency_options',
+			array(
+				'sanitize_callback' => array( $this, 'sanitize_currency_options' ),
+			)
+		);
 		
 		add_settings_section(
 			'sf_currency_section',
@@ -131,6 +137,38 @@ class SF_Admin {
 			'sf_currency_section',
 			array( 'field' => 'decimals', 'default' => 0 )
 		);
+	}
+
+	/**
+	 * Sanitize currency options
+	 *
+	 * @param array $input Input data
+	 * @return array Sanitized data
+	 */
+	public function sanitize_currency_options( $input ) {
+		$new_input = array();
+
+		if ( isset( $input['symbol'] ) ) {
+			$new_input['symbol'] = sanitize_text_field( $input['symbol'] );
+		}
+
+		if ( isset( $input['position'] ) ) {
+			$new_input['position'] = in_array( $input['position'], array( 'before', 'after' ) ) ? $input['position'] : 'before';
+		}
+
+		if ( isset( $input['thousand_sep'] ) ) {
+			$new_input['thousand_sep'] = sanitize_text_field( $input['thousand_sep'] );
+		}
+
+		if ( isset( $input['decimal_sep'] ) ) {
+			$new_input['decimal_sep'] = sanitize_text_field( $input['decimal_sep'] );
+		}
+
+		if ( isset( $input['decimals'] ) ) {
+			$new_input['decimals'] = absint( $input['decimals'] );
+		}
+
+		return $new_input;
 	}
 
 	/**
