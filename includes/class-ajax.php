@@ -22,6 +22,7 @@ class SF_Ajax {
 		add_action( 'wp_ajax_sf_spreadsheet_save', array( $this, 'spreadsheet_save' ) );
 		add_action( 'wp_ajax_sf_spreadsheet_add', array( $this, 'spreadsheet_add' ) );
 		add_action( 'wp_ajax_sf_spreadsheet_delete', array( $this, 'spreadsheet_delete' ) );
+		add_action( 'wp_ajax_sf_spreadsheet_bulk_delete', array( $this, 'spreadsheet_bulk_delete' ) );
 	}
 
 	/**
@@ -249,5 +250,34 @@ class SF_Ajax {
 		} else {
 			wp_send_json_error( array( 'message' => 'Failed to delete' ) );
 		}
+	}
+
+	/**
+	 * Bulk delete donations via spreadsheet
+	 */
+	public function spreadsheet_bulk_delete() {
+		check_ajax_referer( 'sf_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+		}
+
+		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', $_POST['ids'] ) : array();
+
+		if ( empty( $ids ) ) {
+			wp_send_json_error( array( 'message' => 'No IDs provided' ) );
+		}
+
+		$deleted = 0;
+		foreach ( $ids as $id ) {
+			if ( wp_delete_post( $id, true ) ) {
+				$deleted++;
+			}
+		}
+
+		wp_send_json_success( array(
+			'message' => sprintf( '%d donations deleted', $deleted ),
+			'deleted' => $deleted,
+		) );
 	}
 }

@@ -61,10 +61,12 @@ class SF_Spreadsheet {
 			'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
 			'nonce'     => wp_create_nonce( 'sf_spreadsheet_nonce' ),
 			'strings'   => array(
-				'confirmDelete' => __( 'Are you sure you want to delete this donation?', 'simple-fundraiser' ),
-				'saving'        => __( 'Saving...', 'simple-fundraiser' ),
-				'saved'         => __( 'Saved!', 'simple-fundraiser' ),
-				'error'         => __( 'Error saving. Please try again.', 'simple-fundraiser' ),
+				'confirmDelete'     => __( 'Are you sure you want to delete this donation?', 'simple-fundraiser' ),
+				'confirmBulkDelete' => __( 'Are you sure you want to delete %d donations?', 'simple-fundraiser' ),
+				'saving'            => __( 'Saving...', 'simple-fundraiser' ),
+				'saved'             => __( 'Saved!', 'simple-fundraiser' ),
+				'error'             => __( 'Error saving. Please try again.', 'simple-fundraiser' ),
+				'selected'          => __( 'selected', 'simple-fundraiser' ),
 			),
 		) );
 	}
@@ -109,9 +111,20 @@ class SF_Spreadsheet {
 				</button>
 			</div>
 
+			<div class="sf-bulk-actions" style="display: none;">
+				<span class="sf-selected-count">0 <?php esc_html_e( 'selected', 'simple-fundraiser' ); ?></span>
+				<select id="sf-bulk-action">
+					<option value=""><?php esc_html_e( 'Bulk Actions', 'simple-fundraiser' ); ?></option>
+					<option value="delete"><?php esc_html_e( 'Delete', 'simple-fundraiser' ); ?></option>
+				</select>
+				<button type="button" id="sf-apply-bulk" class="button"><?php esc_html_e( 'Apply', 'simple-fundraiser' ); ?></button>
+				<button type="button" id="sf-clear-selection" class="button"><?php esc_html_e( 'Clear Selection', 'simple-fundraiser' ); ?></button>
+			</div>
+
 			<table class="sf-spreadsheet-table widefat striped" data-campaign-id="<?php echo esc_attr( $campaign_id ); ?>">
 				<thead>
 					<tr>
+						<th class="sf-col-check"><input type="checkbox" id="sf-select-all" title="<?php esc_attr_e( 'Select All', 'simple-fundraiser' ); ?>"></th>
 						<th class="sf-col-id"><?php esc_html_e( 'ID', 'simple-fundraiser' ); ?></th>
 						<th class="sf-col-campaign"><?php esc_html_e( 'Campaign', 'simple-fundraiser' ); ?></th>
 						<th class="sf-col-donor"><?php esc_html_e( 'Donor Name', 'simple-fundraiser' ); ?></th>
@@ -125,7 +138,7 @@ class SF_Spreadsheet {
 				<tbody id="sf-spreadsheet-body">
 					<?php if ( empty( $donations ) ) : ?>
 						<tr class="sf-no-data">
-							<td colspan="8"><?php esc_html_e( 'No donations found. Add one using the button above.', 'simple-fundraiser' ); ?></td>
+							<td colspan="9"><?php esc_html_e( 'No donations found. Add one using the button above.', 'simple-fundraiser' ); ?></td>
 						</tr>
 					<?php else : ?>
 						<?php foreach ( $donations as $donation ) : ?>
@@ -193,6 +206,11 @@ class SF_Spreadsheet {
 		$anonymous = $is_new ? '' : get_post_meta( $donation->ID, '_sf_anonymous', true );
 		?>
 		<tr class="sf-row <?php echo $is_new ? 'sf-new-row' : ''; ?>" data-id="<?php echo esc_attr( $id ); ?>">
+			<td class="sf-col-check">
+				<?php if ( ! $is_new ) : ?>
+					<input type="checkbox" class="sf-row-select" value="<?php echo esc_attr( $id ); ?>">
+				<?php endif; ?>
+			</td>
 			<td class="sf-col-id">
 				<?php if ( $is_new ) : ?>
 					<span class="sf-new-label"><?php esc_html_e( 'New', 'simple-fundraiser' ); ?></span>

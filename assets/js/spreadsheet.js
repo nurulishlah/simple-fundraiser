@@ -73,6 +73,32 @@
                 }
             }
         });
+
+        // Bulk selection - Select All
+        $('#sf-select-all').on('change', function () {
+            var isChecked = $(this).is(':checked');
+            $tbody.find('.sf-row-select').prop('checked', isChecked);
+            updateBulkActions();
+        });
+
+        // Bulk selection - Individual checkbox
+        $tbody.on('change', '.sf-row-select', function () {
+            updateBulkActions();
+            // Update "select all" state
+            var total = $tbody.find('.sf-row-select').length;
+            var checked = $tbody.find('.sf-row-select:checked').length;
+            $('#sf-select-all').prop('checked', total === checked && total > 0);
+        });
+
+        // Apply bulk action
+        $('#sf-apply-bulk').on('click', applyBulkAction);
+
+        // Clear selection
+        $('#sf-clear-selection').on('click', function () {
+            $tbody.find('.sf-row-select').prop('checked', false);
+            $('#sf-select-all').prop('checked', false);
+            updateBulkActions();
+        });
     }
 
     /**
@@ -284,8 +310,93 @@
      */
     function showNoDataRowIfEmpty() {
         if ($tbody.find('.sf-row').length === 0) {
-            $tbody.html('<tr class="sf-no-data"><td colspan="8">No donations found. Add one using the button above.</td></tr>');
+            $tbody.html('<tr class="sf-no-data"><td colspan="9">No donations found. Add one using the button above.</td></tr>');
         }
+    }
+
+    /**
+     * Update bulk actions bar visibility and count
+     */
+    function updateBulkActions() {
+        var $checked = $tbody.find('.sf-row-select:checked');
+        var count = $checked.length;
+        var $bulkBar = $('.sf-bulk-actions');
+
+        if (count > 0) {
+            $bulkBar.show();
+            $bulkBar.find('.sf-selected-count').text(count + ' ' + sfSpreadsheet.strings.selected);
+        } else {
+            $bulkBar.hide();
+        }
+    }
+
+    /**
+     * Apply the selected bulk action
+     */
+    function applyBulkAction() {
+        var action = $('#sf-bulk-action').val();
+        var $checked = $tbody.find('.sf-row-select:checked');
+
+        if (!action) {
+            alert('Please select a bulk action.');
+            return;
+        }
+
+        if ($checked.length === 0) {
+            alert('No items selected.');
+            return;
+        }
+
+        switch (action) {
+            case 'delete':
+                bulkDelete($checked);
+                break;
+        }
+    }
+
+    /**
+     * Bulk delete selected donations
+     */
+    function bulkDelete($checked) {
+        var ids = [];
+        $checked.each(function () {
+            ids.push($(this).val());
+        });
+
+        if (!confirm(sfSpreadsheet.strings.confirmBulkDelete.replace('%d', ids.length))) {
+            return;
+        }
+
+        // Disable interactions
+        $checked.closest('.sf-row').addClass('saving');
+
+        $.ajax({
+            url: sfSpreadsheet.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'sf_spreadsheet_bulk_delete',
+                nonce: sfSpreadsheet.nonce,
+                ids: ids
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Remove deleted rows
+                    $checked.closest('.sf-row').fadeOut(300, function () {
+                        $(this).remove();
+                        showNoDataRowIfEmpty();
+                        updateBulkActions();
+                        $('#sf-select-all').prop('checked', false);
+                    });
+                } else {
+                    $checked.closest('.sf-row').removeClass('saving');
+                    alert(sfSpreadsheet.strings.error);
+                }
+            },
+            error: function () {
+                $checked.closest('.sf-row').removeClass('saving');
+                alert(sfSpreadsheet.strings.error);
+            }
+        });
     }
 
     // Initialize on DOM ready
