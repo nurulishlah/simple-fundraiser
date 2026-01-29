@@ -217,3 +217,29 @@ td select.sf-cell-input {
         width: 100%;
     }
 }
+
+/* Pagination */
+.sf-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+}
+
+.sf-pagination-info {
+    color: #50575e;
+}
+
+.sf-pagination-links {
+    display: flex;
+    gap: 10px;
+}
+
+.sf-pagination-links .button {
+    min-width: 100px;
+    text-align: center;
+}

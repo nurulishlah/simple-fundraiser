@@ -74,8 +74,14 @@ class SF_Spreadsheet {
 	 */
 	public function render_page() {
 		$campaign_id = isset( $_GET['campaign_id'] ) ? absint( $_GET['campaign_id'] ) : 0;
+		$paged = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		$per_page = 50;
+		
 		$campaigns = $this->get_campaigns();
-		$donations = $this->get_donations( $campaign_id );
+		$donations_query = $this->get_donations_query( $campaign_id, $paged, $per_page );
+		$donations = $donations_query->posts;
+		$total_pages = $donations_query->max_num_pages;
+		$total_donations = $donations_query->found_posts;
 		$donation_types = $campaign_id ? $this->get_donation_types( $campaign_id ) : array();
 		?>
 		<div class="wrap sf-spreadsheet-wrap">
@@ -137,6 +143,37 @@ class SF_Spreadsheet {
 				<script type="text/html" id="sf-row-template">
 					<?php $this->render_row( null, $campaigns, true, $donation_types ); ?>
 				</script>
+			<?php endif; ?>
+
+			<?php if ( $total_pages > 1 ) : ?>
+				<div class="sf-pagination">
+					<span class="sf-pagination-info">
+						<?php 
+						printf( 
+							esc_html__( 'Page %1$d of %2$d (%3$d donations)', 'simple-fundraiser' ), 
+							$paged, 
+							$total_pages, 
+							$total_donations 
+						); 
+						?>
+					</span>
+					<span class="sf-pagination-links">
+						<?php
+						$base_url = admin_url( 'edit.php?post_type=sf_campaign&page=sf_spreadsheet' );
+						if ( $campaign_id ) {
+							$base_url .= '&campaign_id=' . $campaign_id;
+						}
+						
+						if ( $paged > 1 ) :
+						?>
+							<a href="<?php echo esc_url( $base_url . '&paged=' . ( $paged - 1 ) ); ?>" class="button">&laquo; <?php esc_html_e( 'Previous', 'simple-fundraiser' ); ?></a>
+						<?php endif; ?>
+						
+						<?php if ( $paged < $total_pages ) : ?>
+							<a href="<?php echo esc_url( $base_url . '&paged=' . ( $paged + 1 ) ); ?>" class="button"><?php esc_html_e( 'Next', 'simple-fundraiser' ); ?> &raquo;</a>
+						<?php endif; ?>
+					</span>
+				</div>
 			<?php endif; ?>
 		</div>
 		<?php
@@ -234,12 +271,13 @@ class SF_Spreadsheet {
 	}
 
 	/**
-	 * Get donations
+	 * Get donations query
 	 */
-	private function get_donations( $campaign_id = 0 ) {
+	private function get_donations_query( $campaign_id = 0, $paged = 1, $per_page = 50 ) {
 		$args = array(
 			'post_type'      => 'sf_donation',
-			'posts_per_page' => 100,
+			'posts_per_page' => $per_page,
+			'paged'          => $paged,
 			'post_status'    => 'publish',
 			'orderby'        => 'ID',
 			'order'          => 'DESC',
@@ -254,7 +292,7 @@ class SF_Spreadsheet {
 			);
 		}
 
-		return get_posts( $args );
+		return new WP_Query( $args );
 	}
 
 	/**
