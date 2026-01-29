@@ -210,11 +210,100 @@ td select.sf-cell-input {
 @media screen and (max-width: 900px) {
     .sf-spreadsheet-toolbar {
         flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .sf-filter-form {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .sf-filter-form select {
+        flex: 1;
+        min-width: 150px;
     }
 
     #sf-add-row {
         margin-left: 0;
         width: 100%;
+    }
+
+    .sf-pagination {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+    /* Make table horizontally scrollable */
+    .sf-spreadsheet-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sf-spreadsheet-table {
+        min-width: 800px;
+    }
+
+    /* Smaller column widths for mobile */
+    .sf-col-id {
+        width: 50px;
+    }
+
+    .sf-col-campaign,
+    .sf-col-donor {
+        width: 120px;
+    }
+
+    .sf-col-amount,
+    .sf-col-date,
+    .sf-col-type {
+        width: 100px;
+    }
+
+    .sf-col-anon {
+        width: 50px;
+    }
+
+    .sf-col-actions {
+        width: 80px;
+    }
+
+    /* Smaller inputs */
+    .sf-cell-input {
+        padding: 4px 6px;
+        font-size: 13px;
+    }
+
+    /* Stack pagination buttons on very small screens */
+    .sf-pagination-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .sf-pagination-links .button {
+        min-width: 80px;
+        font-size: 12px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sf-spreadsheet-toolbar {
+        padding: 10px;
+    }
+
+    .sf-filter-form label {
+        display: none;
+    }
+
+    .sf-pagination {
+        padding: 10px;
+    }
+
+    .sf-pagination-info {
+        font-size: 12px;
     }
 }
 
