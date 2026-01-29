@@ -23,6 +23,7 @@ class SF_Ajax {
 		add_action( 'wp_ajax_sf_spreadsheet_add', array( $this, 'spreadsheet_add' ) );
 		add_action( 'wp_ajax_sf_spreadsheet_delete', array( $this, 'spreadsheet_delete' ) );
 		add_action( 'wp_ajax_sf_spreadsheet_bulk_delete', array( $this, 'spreadsheet_bulk_delete' ) );
+		add_action( 'wp_ajax_sf_spreadsheet_bulk_update', array( $this, 'spreadsheet_bulk_update' ) );
 	}
 
 	/**
@@ -278,6 +279,49 @@ class SF_Ajax {
 		wp_send_json_success( array(
 			'message' => sprintf( '%d donations deleted', $deleted ),
 			'deleted' => $deleted,
+		) );
+	}
+
+	/**
+	 * Bulk update a field for donations via spreadsheet
+	 */
+	public function spreadsheet_bulk_update() {
+		check_ajax_referer( 'sf_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+		}
+
+		$ids = isset( $_POST['ids'] ) ? array_map( 'absint', $_POST['ids'] ) : array();
+		$field = isset( $_POST['field'] ) ? sanitize_text_field( $_POST['field'] ) : '';
+		$value = isset( $_POST['value'] ) ? sanitize_text_field( $_POST['value'] ) : '';
+
+		if ( empty( $ids ) || empty( $field ) ) {
+			wp_send_json_error( array( 'message' => 'Missing data' ) );
+		}
+
+		// Map field to meta key
+		$field_map = array(
+			'anonymous' => '_sf_anonymous',
+			'type'      => '_sf_donation_type',
+		);
+
+		if ( ! isset( $field_map[ $field ] ) ) {
+			wp_send_json_error( array( 'message' => 'Invalid field' ) );
+		}
+
+		$meta_key = $field_map[ $field ];
+		$updated = 0;
+
+		foreach ( $ids as $id ) {
+			if ( update_post_meta( $id, $meta_key, $value ) ) {
+				$updated++;
+			}
+		}
+
+		wp_send_json_success( array(
+			'message' => sprintf( '%d donations updated', $updated ),
+			'updated' => $updated,
 		) );
 	}
 }

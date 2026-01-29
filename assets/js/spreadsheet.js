@@ -93,6 +93,16 @@
         // Apply bulk action
         $('#sf-apply-bulk').on('click', applyBulkAction);
 
+        // Show/hide type selector based on action
+        $('#sf-bulk-action').on('change', function () {
+            var action = $(this).val();
+            if (action === 'change_type') {
+                $('#sf-bulk-type').show();
+            } else {
+                $('#sf-bulk-type').hide();
+            }
+        });
+
         // Clear selection
         $('#sf-clear-selection').on('click', function () {
             $tbody.find('.sf-row-select').prop('checked', false);
@@ -351,6 +361,20 @@
             case 'delete':
                 bulkDelete($checked);
                 break;
+            case 'set_anonymous':
+                bulkUpdateField($checked, 'anonymous', '1');
+                break;
+            case 'unset_anonymous':
+                bulkUpdateField($checked, 'anonymous', '0');
+                break;
+            case 'change_type':
+                var typeValue = $('#sf-bulk-type').val();
+                if (!typeValue) {
+                    alert('Please select a type.');
+                    return;
+                }
+                bulkUpdateField($checked, 'type', typeValue);
+                break;
         }
     }
 
@@ -387,6 +411,66 @@
                         updateBulkActions();
                         $('#sf-select-all').prop('checked', false);
                     });
+                } else {
+                    $checked.closest('.sf-row').removeClass('saving');
+                    alert(sfSpreadsheet.strings.error);
+                }
+            },
+            error: function () {
+                $checked.closest('.sf-row').removeClass('saving');
+                alert(sfSpreadsheet.strings.error);
+            }
+        });
+    }
+
+    /**
+     * Bulk update a field for selected donations
+     */
+    function bulkUpdateField($checked, field, value) {
+        var ids = [];
+        $checked.each(function () {
+            ids.push($(this).val());
+        });
+
+        // Disable interactions
+        $checked.closest('.sf-row').addClass('saving');
+
+        $.ajax({
+            url: sfSpreadsheet.ajaxUrl,
+            type: 'POST',
+            data: {
+                action: 'sf_spreadsheet_bulk_update',
+                nonce: sfSpreadsheet.nonce,
+                ids: ids,
+                field: field,
+                value: value
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Update the UI for each row
+                    $checked.each(function () {
+                        var $row = $(this).closest('.sf-row');
+
+                        if (field === 'anonymous') {
+                            $row.find('[data-field="anonymous"]').prop('checked', value === '1');
+                        } else if (field === 'type') {
+                            var $typeField = $row.find('[data-field="type"]');
+                            if ($typeField.is('select')) {
+                                $typeField.val(value);
+                            } else {
+                                $typeField.val(value);
+                            }
+                        }
+
+                        setRowStatus($row, 'saved');
+                    });
+
+                    $checked.closest('.sf-row').removeClass('saving');
+
+                    // Clear selection
+                    $checked.prop('checked', false);
+                    $('#sf-select-all').prop('checked', false);
+                    updateBulkActions();
                 } else {
                     $checked.closest('.sf-row').removeClass('saving');
                     alert(sfSpreadsheet.strings.error);

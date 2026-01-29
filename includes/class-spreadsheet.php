@@ -116,7 +116,20 @@ class SF_Spreadsheet {
 				<select id="sf-bulk-action">
 					<option value=""><?php esc_html_e( 'Bulk Actions', 'simple-fundraiser' ); ?></option>
 					<option value="delete"><?php esc_html_e( 'Delete', 'simple-fundraiser' ); ?></option>
+					<option value="set_anonymous"><?php esc_html_e( 'Set as Anonymous', 'simple-fundraiser' ); ?></option>
+					<option value="unset_anonymous"><?php esc_html_e( 'Set as Not Anonymous', 'simple-fundraiser' ); ?></option>
+					<?php if ( $campaign_id && ! empty( $donation_types ) ) : ?>
+						<option value="change_type"><?php esc_html_e( 'Change Type', 'simple-fundraiser' ); ?></option>
+					<?php endif; ?>
 				</select>
+				<?php if ( $campaign_id && ! empty( $donation_types ) ) : ?>
+					<select id="sf-bulk-type" style="display: none;">
+						<option value=""><?php esc_html_e( '— Select Type —', 'simple-fundraiser' ); ?></option>
+						<?php foreach ( $donation_types as $dtype ) : ?>
+							<option value="<?php echo esc_attr( $dtype ); ?>"><?php echo esc_html( $dtype ); ?></option>
+						<?php endforeach; ?>
+					</select>
+				<?php endif; ?>
 				<button type="button" id="sf-apply-bulk" class="button"><?php esc_html_e( 'Apply', 'simple-fundraiser' ); ?></button>
 				<button type="button" id="sf-clear-selection" class="button"><?php esc_html_e( 'Clear Selection', 'simple-fundraiser' ); ?></button>
 			</div>
