@@ -720,5 +720,94 @@ msgid "Error saving. Please try again."
 msgstr "Gagal menyimpan. Silakan coba lagi."
 
 #: includes/class-spreadsheet.php:284
-msgid "Edit"
-msgstr "Edit"
+
+msgid "Distribution Spreadsheet"
+msgstr "Spreadsheet Distribusi"
+
+msgid "Distributions"
+msgstr "Distribusi"
+
+msgid "Add Distribution"
+msgstr "Tambah Distribusi"
+
+msgid "Edit Distribution"
+msgstr "Edit Distribusi"
+
+msgid "Search Distributions"
+msgstr "Cari Distribusi"
+
+msgid "No distributions found"
+msgstr "Tidak ada distribusi ditemukan"
+
+msgid "No distributions found in trash"
+msgstr "Tidak ada distribusi di tempat sampah"
+
+msgid "Distribution Details"
+msgstr "Detail Distribusi"
+
+msgid "Receipt / Proof"
+msgstr "Bukti / Tanda Terima"
+
+msgid "Proof"
+msgstr "Bukti"
+
+msgid "Upload/Select Proof"
+msgstr "Unggah/Pilih Bukti"
+
+msgid "Select or Upload Proof of Distribution"
+msgstr "Pilih atau Unggah Bukti Distribusi"
+
+msgid "Recipient"
+msgstr "Penerima"
+
+msgid "Description"
+msgstr "Deskripsi"
+
+msgid "Details about this distribution..."
+msgstr "Detail tentang distribusi ini..."
+
+msgid "Name of recipient"
+msgstr "Nama penerima"
+
+msgid "Enter custom type"
+msgstr "Masukkan jenis kustom"
+
+msgid "Select a campaign to see predefined types."
+msgstr "Pilih kampanye untuk melihat jenis yang telah ditentukan."
+
+msgid "Upload Receipt"
+msgstr "Unggah Tanda Terima"
+
+msgid "Select Receipt Image"
+msgstr "Pilih Gambar Tanda Terima"
+
+msgid "Use Image"
+msgstr "Gunakan Gambar"
+
+msgid "Distributions Spreadsheet"
+msgstr "Spreadsheet Distribusi"
+
+msgid "Are you sure you want to delete this distribution?"
+msgstr "Apakah Anda yakin ingin menghapus distribusi ini?"
+
+msgid "Are you sure you want to delete %d distributions?"
+msgstr "Apakah Anda yakin ingin menghapus %d distribusi?"
+
+msgid "No distributions found. Add one using the button above."
+msgstr "Tidak ada distribusi ditemukan. Tambahkan menggunakan tombol di atas."
+
+msgid "Data Type"
+msgstr "Tipe Data"
+
+msgid "Fund Distribution"
+msgstr "Penyaluran Dana"
+
+msgid "Distribution Report"
+msgstr "Laporan Penyaluran"
+
+msgid "View Proof"
+msgstr "Lihat Bukti"
+
+msgid "Close"
+msgstr "Tutup"
+

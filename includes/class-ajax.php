@@ -32,6 +32,13 @@ class SF_Ajax {
 		add_action( 'wp_ajax_nopriv_sf_get_distributions', array( $this, 'get_distributions' ) );
 		add_action( 'wp_ajax_sf_verify_dist_password', array( $this, 'verify_dist_password' ) );
 		add_action( 'wp_ajax_nopriv_sf_verify_dist_password', array( $this, 'verify_dist_password' ) );
+		
+		// Distribution Spreadsheet AJAX
+		add_action( 'wp_ajax_sf_dist_spreadsheet_save', array( $this, 'dist_spreadsheet_save' ) );
+		add_action( 'wp_ajax_sf_dist_spreadsheet_add', array( $this, 'dist_spreadsheet_add' ) );
+		add_action( 'wp_ajax_sf_dist_spreadsheet_delete', array( $this, 'dist_spreadsheet_delete' ) );
+		add_action( 'wp_ajax_sf_dist_spreadsheet_bulk_delete', array( $this, 'dist_spreadsheet_bulk_delete' ) );
+		add_action( 'wp_ajax_sf_dist_spreadsheet_bulk_update', array( $this, 'dist_spreadsheet_bulk_update' ) );
 	}
 
 	/**
@@ -512,5 +519,183 @@ class SF_Ajax {
 			'message' => sprintf( '%d donations updated', $updated ),
 			'updated' => $updated,
 		) );
+	}
+
+	/**
+	 * Save distribution from spreadsheet
+	 */
+	public function dist_spreadsheet_save() {
+		check_ajax_referer( 'sf_dist_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'simple-fundraiser' ) ) );
+		}
+
+		$dist_id = isset( $_POST['distribution_id'] ) ? intval( $_POST['distribution_id'] ) : 0;
+		$data    = isset( $_POST['data'] ) ? $_POST['data'] : array();
+
+		if ( ! $dist_id || empty( $data ) ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid data', 'simple-fundraiser' ) ) );
+		}
+
+		// Update meta fields
+		if ( isset( $data['campaign_id'] ) ) {
+			update_post_meta( $dist_id, '_sf_campaign_id', sanitize_text_field( $data['campaign_id'] ) );
+		}
+		if ( isset( $data['amount'] ) ) {
+			update_post_meta( $dist_id, '_sf_dist_amount', sanitize_text_field( $data['amount'] ) );
+		}
+		if ( isset( $data['date'] ) ) {
+			update_post_meta( $dist_id, '_sf_dist_date', sanitize_text_field( $data['date'] ) );
+		}
+		if ( isset( $data['recipient'] ) ) {
+			update_post_meta( $dist_id, '_sf_dist_recipient', sanitize_text_field( $data['recipient'] ) );
+		}
+		if ( isset( $data['description'] ) ) {
+			update_post_meta( $dist_id, '_sf_dist_description', sanitize_text_field( $data['description'] ) );
+		}
+		if ( isset( $data['type'] ) ) {
+			update_post_meta( $dist_id, '_sf_dist_type', sanitize_text_field( $data['type'] ) );
+		}
+		if ( isset( $data['proof_id'] ) ) {
+			update_post_meta( $dist_id, '_sf_dist_proof', sanitize_text_field( $data['proof_id'] ) );
+		}
+
+		// Update title
+		$recipient = get_post_meta( $dist_id, '_sf_dist_recipient', true );
+		$amount = get_post_meta( $dist_id, '_sf_dist_amount', true );
+		$new_title = sprintf( 'Distribution to %s - %s', $recipient, $amount );
+		
+		wp_update_post( array(
+			'ID'         => $dist_id,
+			'post_title' => $new_title,
+		) );
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Add new distribution from spreadsheet
+	 */
+	public function dist_spreadsheet_add() {
+		check_ajax_referer( 'sf_dist_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'simple-fundraiser' ) ) );
+		}
+
+		$data = isset( $_POST['data'] ) ? $_POST['data'] : array();
+
+		if ( empty( $data ) || empty( $data['campaign_id'] ) || empty( $data['amount'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Missing required fields', 'simple-fundraiser' ) ) );
+		}
+
+		$recipient = isset( $data['recipient'] ) ? sanitize_text_field( $data['recipient'] ) : __( 'Unknown', 'simple-fundraiser' );
+		$amount = sanitize_text_field( $data['amount'] );
+		
+		$post_id = wp_insert_post( array(
+			'post_type'   => 'sf_distribution',
+			'post_title'  => sprintf( 'Distribution to %s - %s', $recipient, $amount ),
+			'post_status' => 'publish',
+		) );
+
+		if ( is_wp_error( $post_id ) ) {
+			wp_send_json_error( array( 'message' => $post_id->get_error_message() ) );
+		}
+
+		// Save meta
+		update_post_meta( $post_id, '_sf_campaign_id', sanitize_text_field( $data['campaign_id'] ) );
+		update_post_meta( $post_id, '_sf_dist_amount', $amount );
+		update_post_meta( $post_id, '_sf_dist_date', isset( $data['date'] ) ? sanitize_text_field( $data['date'] ) : current_time( 'Y-m-d' ) );
+		update_post_meta( $post_id, '_sf_dist_recipient', $recipient );
+		if ( isset( $data['description'] ) ) {
+			update_post_meta( $post_id, '_sf_dist_description', sanitize_text_field( $data['description'] ) );
+		}
+		if ( isset( $data['type'] ) ) {
+			update_post_meta( $post_id, '_sf_dist_type', sanitize_text_field( $data['type'] ) );
+		}
+		if ( isset( $data['proof_id'] ) ) {
+			update_post_meta( $post_id, '_sf_dist_proof', sanitize_text_field( $data['proof_id'] ) );
+		}
+
+		wp_send_json_success( array(
+			'id'       => $post_id,
+			'edit_url' => get_edit_post_link( $post_id, 'raw' ),
+		) );
+	}
+
+	/**
+	 * Delete distribution
+	 */
+	public function dist_spreadsheet_delete() {
+		check_ajax_referer( 'sf_dist_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'delete_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'simple-fundraiser' ) ) );
+		}
+
+		$dist_id = isset( $_POST['distribution_id'] ) ? intval( $_POST['distribution_id'] ) : 0;
+
+		if ( ! $dist_id ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid ID', 'simple-fundraiser' ) ) );
+		}
+
+		if ( wp_delete_post( $dist_id, true ) ) {
+			wp_send_json_success();
+		} else {
+			wp_send_json_error( array( 'message' => __( 'Failed to delete', 'simple-fundraiser' ) ) );
+		}
+	}
+
+	/**
+	 * Bulk delete distributions
+	 */
+	public function dist_spreadsheet_bulk_delete() {
+		check_ajax_referer( 'sf_dist_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'delete_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'simple-fundraiser' ) ) );
+		}
+
+		$ids = isset( $_POST['ids'] ) ? $_POST['ids'] : array();
+
+		if ( empty( $ids ) || ! is_array( $ids ) ) {
+			wp_send_json_error( array( 'message' => __( 'No items selected', 'simple-fundraiser' ) ) );
+		}
+
+		foreach ( $ids as $id ) {
+			wp_delete_post( intval( $id ), true );
+		}
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Bulk update distributions
+	 */
+	public function dist_spreadsheet_bulk_update() {
+		check_ajax_referer( 'sf_dist_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied', 'simple-fundraiser' ) ) );
+		}
+
+		$ids   = isset( $_POST['ids'] ) ? $_POST['ids'] : array();
+		$field = isset( $_POST['field'] ) ? sanitize_text_field( $_POST['field'] ) : '';
+		$value = isset( $_POST['value'] ) ? sanitize_text_field( $_POST['value'] ) : '';
+
+		if ( empty( $ids ) || ! is_array( $ids ) || ! $field ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid request', 'simple-fundraiser' ) ) );
+		}
+
+		foreach ( $ids as $id ) {
+			$id = intval( $id );
+			
+			if ( 'type' === $field ) {
+				update_post_meta( $id, '_sf_dist_type', $value );
+			}
+		}
+
+		wp_send_json_success();
 	}
 }

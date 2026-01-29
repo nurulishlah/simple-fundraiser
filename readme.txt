@@ -4,7 +4,7 @@ Tags: fundraising, donation, charity, mosque, infaq
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,8 @@ A simple fundraising plugin for mosques and organizations to manage donations an
 Simple Fundraiser is a lightweight plugin designed to help mosques, charities, and non-profit organizations manage fundraising campaigns easily. 
 
 **Features:**
+*   **Fund Distribution Report:** Transparency feature to show how funds are used (with receipts/proofs).
+*   **Distribution Spreadsheet:** Admin view to manage distributions efficiently.
 *   **Unlimited Campaigns:** Create as many fundraising campaigns as you need.
 *   **Gutenberg Block:** Beautifully designed block with "Featured Grid", "Carousel", and "Hero Spotlight" layouts.
 *   **Manual Donation Entry:** Record offline donations (cash, transfer) manually via the admin dashboard.
@@ -24,7 +26,7 @@ Simple Fundraiser is a lightweight plugin designed to help mosques, charities, a
 *   **Multi-Currency Support:** Customizable currency symbol, decimal places, and separators.
 *   **Payment Information:** Display Bank Transfer details and QRIS codes.
 *   **WhatsApp Confirmation:** Allow donors to quickly confirm their donation via WhatsApp.
-*   **Export Data:** Export donation records to CSV or Excel (.xlsx) for reporting.
+*   **Export Data:** Export records (Donations & Distributions) to CSV or Excel (.xlsx) for reporting.
 *   **Translation Ready:** Fully localized and includes Bahasa Indonesia translation.
 *   **Excel Support:** Import and Export data using Excel files.
 *   **Social Sharing:** Integrated sharing buttons for WhatsApp, Facebook, and X.
@@ -52,10 +54,20 @@ Yes! Go to **Fundraiser > Settings** to change the currency symbol (e.g., Rp, $)
 
 1.  **Fundraiser Dashboard** - Overview of your active campaigns and total raised.
 2.  **Campaign Editor** - Easy-to-use interface to set goals, deadlines, and donation types.
-3.  **Frontend Campaign** - Beautiful progress bar and donation list.
+3.  **Frontend Campaign** - Beautiful progress bar, donation list, and distribution report.
 4.  **Donation Entry** - Simple form to record new donations.
+5.  **Distribution Spreadsheet** - Manage fund distributions with proofs.
 
 == Changelog ==
+
+= 1.5.0 =
+*   New Feature: Fund Distribution Reporting (CPT, Admin UI, Frontend).
+*   New Feature: Admin Spreadsheet View for Distributions.
+*   New Feature: Receipt / Proof of Distribution management.
+*   New Feature: Password protection for distribution reports.
+*   Improvement: Added "Data Type" selector to Export tool (Donations vs Distributions).
+*   Improvement: Tabbed interface for Donations and Distribution Reports on campaign page.
+*   Update: Indonesian translation for new features.
 
 = 1.4.1 =
 *   Fix: Removed discouraged `load_plugin_textdomain` function.

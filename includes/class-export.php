@@ -55,6 +55,15 @@ class SF_Export {
 				
 				<table class="form-table">
 					<tr>
+						<th><label for="sf_export_type"><?php esc_html_e( 'Data Type', 'simple-fundraiser' ); ?></label></th>
+						<td>
+							<select id="sf_export_type" name="sf_export_type">
+								<option value="donations"><?php esc_html_e( 'Donations', 'simple-fundraiser' ); ?></option>
+								<option value="distributions"><?php esc_html_e( 'Distributions', 'simple-fundraiser' ); ?></option>
+							</select>
+						</td>
+					</tr>
+					<tr>
 						<th><label for="sf_export_campaign"><?php esc_html_e( 'Campaign', 'simple-fundraiser' ); ?></label></th>
 						<td>
 							<select id="sf_export_campaign" name="sf_export_campaign">
@@ -101,6 +110,9 @@ class SF_Export {
 	/**
 	 * Handle export
 	 */
+	/**
+	 * Handle export
+	 */
 	public function handle_export() {
 		if ( ! isset( $_POST['sf_export_submit'] ) ) {
 			return;
@@ -114,6 +126,19 @@ class SF_Export {
 			return;
 		}
 
+		$type = isset( $_POST['sf_export_type'] ) ? sanitize_text_field( $_POST['sf_export_type'] ) : 'donations';
+
+		if ( 'distributions' === $type ) {
+			$this->export_distributions();
+		} else {
+			$this->export_donations();
+		}
+	}
+
+	/**
+	 * Export Donations
+	 */
+	private function export_donations() {
 		// Build query args
 		$args = array(
 			'post_type'      => 'sf_donation',
@@ -150,8 +175,7 @@ class SF_Export {
 		}
 
 		$donations = get_posts( $args );
-		$format    = isset( $_POST['sf_export_format'] ) ? sanitize_text_field( $_POST['sf_export_format'] ) : 'csv';
-
+		
 		// Prepare Data
 		$data = array();
 		
@@ -197,14 +221,106 @@ class SF_Export {
 			$data[] = $row;
 		}
 
+		$this->download_file( $data, 'donations' );
+	}
+
+	/**
+	 * Export Distributions
+	 */
+	private function export_distributions() {
+		// Build query args
+		$args = array(
+			'post_type'      => 'sf_distribution',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+		);
+
+		$meta_query = array();
+
+		// Filter by campaign
+		if ( ! empty( $_POST['sf_export_campaign'] ) ) {
+			$meta_query[] = array(
+				'key'   => '_sf_campaign_id',
+				'value' => sanitize_text_field( $_POST['sf_export_campaign'] ),
+			);
+		}
+
+		// Filter by date range
+		if ( ! empty( $_POST['sf_export_date_from'] ) || ! empty( $_POST['sf_export_date_to'] ) ) {
+			$date_query = array(
+				'key'     => '_sf_dist_date',
+				'compare' => 'BETWEEN',
+			);
+
+			$from = ! empty( $_POST['sf_export_date_from'] ) ? sanitize_text_field( $_POST['sf_export_date_from'] ) : '1970-01-01';
+			$to = ! empty( $_POST['sf_export_date_to'] ) ? sanitize_text_field( $_POST['sf_export_date_to'] ) : date( 'Y-m-d' );
+			
+			$date_query['value'] = array( $from, $to );
+			$meta_query[] = $date_query;
+		}
+
+		if ( ! empty( $meta_query ) ) {
+			$args['meta_query'] = $meta_query;
+		}
+
+		$distributions = get_posts( $args );
+		
+		// Prepare Data
+		$data = array();
+		
+		// Headers
+		$data[] = array(
+			__( 'Date', 'simple-fundraiser' ),
+			__( 'Recipient', 'simple-fundraiser' ),
+			__( 'Amount', 'simple-fundraiser' ),
+			__( 'Campaign ID', 'simple-fundraiser' ),
+			__( 'Description', 'simple-fundraiser' ),
+			__( 'Type', 'simple-fundraiser' ),
+			__( 'Proof ID', 'simple-fundraiser' ),
+			__( 'Campaign Title', 'simple-fundraiser' ),
+			__( 'ID', 'simple-fundraiser' ),
+		);
+		
+		foreach ( $distributions as $dist ) {
+			$campaign_id = get_post_meta( $dist->ID, '_sf_campaign_id', true );
+			$amount      = get_post_meta( $dist->ID, '_sf_dist_amount', true );
+			$recipient   = get_post_meta( $dist->ID, '_sf_dist_recipient', true );
+			$description = get_post_meta( $dist->ID, '_sf_dist_description', true );
+			$date        = get_post_meta( $dist->ID, '_sf_dist_date', true );
+			$type        = get_post_meta( $dist->ID, '_sf_dist_type', true );
+			$proof_id    = get_post_meta( $dist->ID, '_sf_dist_proof', true );
+			
+			$row = array(
+				$date,
+				$recipient,
+				$amount,
+				$campaign_id,
+				$description,
+				$type,
+				$proof_id,
+				get_the_title( $campaign_id ),
+				$dist->ID,
+			);
+			$data[] = $row;
+		}
+
+		$this->download_file( $data, 'distributions' );
+	}
+
+	/**
+	 * Download file
+	 */
+	private function download_file( $data, $prefix ) {
+		$format = isset( $_POST['sf_export_format'] ) ? sanitize_text_field( $_POST['sf_export_format'] ) : 'csv';
+
 		if ( 'xlsx' === $format && class_exists( 'Shuchkin\SimpleXLSXGen' ) ) {
-			$filename = 'donations-' . date( 'Y-m-d-His' ) . '.xlsx';
+			$filename = $prefix . '-' . date( 'Y-m-d-His' ) . '.xlsx';
 			$xlsx = Shuchkin\SimpleXLSXGen::fromArray( $data );
 			$xlsx->downloadAs( $filename );
 			exit;
 		} else {
 			// Default CSV
-			$filename = 'donations-' . date( 'Y-m-d-His' ) . '.csv';
+			$filename = $prefix . '-' . date( 'Y-m-d-His' ) . '.csv';
 			
 			header( 'Content-Type: text/csv; charset=utf-8' );
 			header( 'Content-Disposition: attachment; filename=' . $filename );
