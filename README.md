@@ -7,6 +7,7 @@ A lightweight WordPress fundraising plugin for mosques and organizations.
 - **Campaign Management** - Create unlimited fundraising campaigns
 - **Goal Tracking** - Set targets with visual progress bars
 - **Manual Donations** - Admin enters donations received via transfer
+- **Spreadsheet View** - Inline editing with bulk actions
 - **QRIS Support** - Upload QR code for Indonesian mobile payments
 - **Donor Info** - Track name, email, phone, message, anonymous option
 - **CSV Export** - Download donation data filtered by campaign/date
@@ -44,7 +45,34 @@ Visit `/campaign/` on your site to see all campaigns, or link to individual camp
 
 Go to **Fundraiser > Export** to download CSV of donations.
 
+### Using Spreadsheet View
+
+1. Go to **Fundraiser > Spreadsheet**
+2. Filter by campaign (required for adding/editing types)
+3. Click on any cell to edit inline
+4. Use checkboxes for bulk selection
+5. Apply bulk actions: Delete, Set Anonymous, or Change Type
+
 ## Changelog
+
+### 1.5.0
+- **New Feature:** Donations Spreadsheet view for inline editing
+- **New Feature:** Bulk selection with Select All checkbox
+- **New Feature:** Bulk actions (Delete, Set Anonymous, Change Type)
+- **New Feature:** Type dropdown populated from campaign's donation types
+- **New Feature:** Pagination (50 donations per page)
+- **Improvement:** Mobile responsive spreadsheet design
+- **Improvement:** Admin menu reordered (Stats at top, Settings at bottom)
+- **Update:** Indonesian translations for spreadsheet feature
+
+### 1.4.1
+- Fix: Plugin submission compatibility improvements
+- Fix: Translation text domain fixes
+
+### 1.4.0
+- New Feature: Hero Spotlight Gutenberg block
+- New Feature: Campaign widget for Elementor
+- Improvement: Carousel navigation option
 
 ### 1.3.0
 - New Feature: Excel (.xlsx) Import and Export support
