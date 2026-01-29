@@ -21,9 +21,198 @@ class SF_Ajax {
 		// Spreadsheet AJAX handlers
 		add_action( 'wp_ajax_sf_spreadsheet_save', array( $this, 'spreadsheet_save' ) );
 		add_action( 'wp_ajax_sf_spreadsheet_add', array( $this, 'spreadsheet_add' ) );
-		add_action( 'wp_ajax_sf_spreadsheet_delete', array( $this, 'spreadsheet_delete' ) );
 		add_action( 'wp_ajax_sf_spreadsheet_bulk_delete', array( $this, 'spreadsheet_bulk_delete' ) );
 		add_action( 'wp_ajax_sf_spreadsheet_bulk_update', array( $this, 'spreadsheet_bulk_update' ) );
+		
+		// Campaign types AJAX
+		add_action( 'wp_ajax_sf_get_campaign_types', array( $this, 'get_campaign_types' ) );
+		
+		// Distribution Report AJAX
+		add_action( 'wp_ajax_sf_get_distributions', array( $this, 'get_distributions' ) );
+		add_action( 'wp_ajax_nopriv_sf_get_distributions', array( $this, 'get_distributions' ) );
+		add_action( 'wp_ajax_sf_verify_dist_password', array( $this, 'verify_dist_password' ) );
+		add_action( 'wp_ajax_nopriv_sf_verify_dist_password', array( $this, 'verify_dist_password' ) );
+	}
+
+	/**
+	 * Verify distribution password
+	 */
+	public function verify_dist_password() {
+		check_ajax_referer( 'sf_nonce', 'nonce' );
+
+		$campaign_id = isset( $_POST['campaign_id'] ) ? intval( $_POST['campaign_id'] ) : 0;
+		$password    = isset( $_POST['password'] ) ? sanitize_text_field( $_POST['password'] ) : '';
+
+		if ( ! $campaign_id || ! $password ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid request', 'simple-fundraiser' ) ) );
+		}
+
+		$real_password = get_post_meta( $campaign_id, '_sf_dist_password', true );
+
+		if ( $password === $real_password ) {
+			// Generate a simple token (in real app, use transient or session)
+			$token = wp_hash( $campaign_id . $password . 'sf_dist_auth' );
+			set_transient( 'sf_dist_auth_' . $token, $campaign_id, HOUR_IN_SECONDS );
+			
+			wp_send_json_success( array(
+				'token' => $token
+			) );
+		} else {
+			wp_send_json_error( array( 'message' => __( 'Incorrect password', 'simple-fundraiser' ) ) );
+		}
+	}
+
+	/**
+	 * Get distributions HTML
+	 */
+	public function get_distributions() {
+		check_ajax_referer( 'sf_nonce', 'nonce' );
+
+		$campaign_id = isset( $_POST['campaign_id'] ) ? intval( $_POST['campaign_id'] ) : 0;
+		$page        = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
+		$token       = isset( $_POST['token'] ) ? sanitize_text_field( $_POST['token'] ) : '';
+
+		if ( ! $campaign_id ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid campaign', 'simple-fundraiser' ) ) );
+		}
+
+		// Check visibility settings
+		$visibility = get_post_meta( $campaign_id, '_sf_dist_visibility', true );
+		if ( ! $visibility ) {
+			$visibility = 'public';
+		}
+
+		if ( 'private' === $visibility && ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => __( 'This report is private.', 'simple-fundraiser' ) ) );
+		}
+
+		if ( 'password' === $visibility ) {
+			// specific check
+			$valid_token = get_transient( 'sf_dist_auth_' . $token );
+			if ( $valid_token != $campaign_id ) {
+				wp_send_json_error( array( 'message' => __( 'Authentication required.', 'simple-fundraiser' ) ) );
+			}
+		}
+
+		// Fetch distributions
+		$args = array(
+			'posts_per_page' => 10,
+			'paged'          => $page,
+		);
+		$query = SF_Distribution_CPT::get_distributions( $campaign_id, $args );
+
+		if ( $query->have_posts() ) {
+			ob_start();
+			?>
+			<div class="sf-distribution-list">
+				<table class="sf-dist-table">
+					<thead>
+						<tr>
+							<th><?php esc_html_e( 'Date', 'simple-fundraiser' ); ?></th>
+							<th><?php esc_html_e( 'Amount', 'simple-fundraiser' ); ?></th>
+							<th><?php esc_html_e( 'Type', 'simple-fundraiser' ); ?></th>
+							<th><?php esc_html_e( 'Recipient', 'simple-fundraiser' ); ?></th>
+							<th><?php esc_html_e( 'Description', 'simple-fundraiser' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php while ( $query->have_posts() ) : $query->the_post(); 
+							$amount = get_post_meta( get_the_ID(), '_sf_dist_amount', true );
+							$date = get_post_meta( get_the_ID(), '_sf_dist_date', true );
+							$type = get_post_meta( get_the_ID(), '_sf_dist_type', true );
+							$recipient = get_post_meta( get_the_ID(), '_sf_dist_recipient', true );
+							$desc = get_post_meta( get_the_ID(), '_sf_dist_description', true );
+							$proof_id = get_post_meta( get_the_ID(), '_sf_dist_proof', true );
+						?>
+							<tr>
+								<td class="sf-dist-date" data-label="<?php esc_attr_e( 'Date', 'simple-fundraiser' ); ?>">
+									<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $date ) ) ); ?>
+								</td>
+								<td class="sf-dist-amount" data-label="<?php esc_attr_e( 'Amount', 'simple-fundraiser' ); ?>">
+									<?php echo esc_html( sf_format_currency( $amount ) ); ?>
+								</td>
+								<td data-label="<?php esc_attr_e( 'Type', 'simple-fundraiser' ); ?>">
+									<?php if ( $type ) : ?>
+										<span class="sf-dist-type"><?php echo esc_html( $type ); ?></span>
+									<?php else : ?>
+										-
+									<?php endif; ?>
+								</td>
+								<td data-label="<?php esc_attr_e( 'Recipient', 'simple-fundraiser' ); ?>">
+									<?php echo $recipient ? esc_html( $recipient ) : '-'; ?>
+								</td>
+								<td class="sf-dist-desc" data-label="<?php esc_attr_e( 'Description', 'simple-fundraiser' ); ?>">
+									<?php echo $desc ? esc_html( $desc ) : ''; ?>
+									<?php if ( $proof_id ) : 
+										$proof_url = wp_get_attachment_url( $proof_id );
+									?>
+										<br><a href="<?php echo esc_url( $proof_url ); ?>" target="_blank" style="font-size: 0.85em;">
+											<span class="dashicons dashicons-media-default" style="vertical-align: middle; font-size: 14px;"></span> 
+											<?php esc_html_e( 'View Receipt', 'simple-fundraiser' ); ?>
+										</a>
+									<?php endif; ?>
+								</td>
+							</tr>
+						<?php endwhile; ?>
+					</tbody>
+				</table>
+
+				<?php if ( $query->max_num_pages > 1 ) : ?>
+					<div class="sf-dist-pagination">
+						<?php
+						echo paginate_links( array(
+							'base'      => '#%#%',
+							'format'    => '?sf_dpage=%#%',
+							'current'   => $page,
+							'total'     => $query->max_num_pages,
+							'prev_text' => __( '&laquo;', 'simple-fundraiser' ),
+							'next_text' => __( '&raquo;', 'simple-fundraiser' ),
+							'mid_size'  => 1
+						) );
+						?>
+					</div>
+				<?php endif; ?>
+			</div>
+			<?php
+			$html = ob_get_clean();
+			wp_send_json_success( array( 'html' => $html ) );
+		} else {
+			wp_send_json_success( array( 'html' => '<p class="sf-no-data">' . __( 'No distributions found yet.', 'simple-fundraiser' ) . '</p>' ) );
+		}
+	}
+
+	/**
+	 * Get campaign types (donation + distribution)
+	 */
+	public function get_campaign_types() {
+		check_ajax_referer( 'sf_nonce', 'nonce' );
+
+		$campaign_id = isset( $_POST['campaign_id'] ) ? intval( $_POST['campaign_id'] ) : 0;
+		if ( ! $campaign_id ) {
+			wp_send_json_error( array( 'message' => 'Invalid campaign ID' ) );
+		}
+
+		// Get distribution types
+		$distribution_types = array();
+		$dist_types_raw = get_post_meta( $campaign_id, '_sf_distribution_types', true );
+		if ( ! empty( $dist_types_raw ) ) {
+			$distribution_types = array_filter( array_map( 'trim', explode( "\n", $dist_types_raw ) ) );
+		}
+
+		// Get donation types
+		$donation_types = array();
+		$don_types_raw = get_post_meta( $campaign_id, '_sf_donation_types', true );
+		if ( ! empty( $don_types_raw ) ) {
+			$donation_types = array_filter( array_map( 'trim', explode( "\n", $don_types_raw ) ) );
+		}
+
+		// Merge and deduplicate
+		$all_types = array_unique( array_merge( $distribution_types, $donation_types ) );
+		sort( $all_types );
+
+		wp_send_json_success( array(
+			'types' => array_values( $all_types )
+		) );
 	}
 
 	/**

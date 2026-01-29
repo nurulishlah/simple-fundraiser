@@ -33,134 +33,207 @@ get_header();
 						<?php the_content(); ?>
 					</div>
 					
-					<!-- Recent Donations -->
-					<div class="sf-recent-donations" id="sf-donations-wrapper" data-campaign-id="<?php the_ID(); ?>">
-						<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e9ecef; padding-bottom: 15px; margin-bottom: 20px;">
-							<h3 style="margin: 0; border: none; padding: 0;"><?php esc_html_e( 'Recent Donations', 'simple-fundraiser' ); ?></h3>
-							<button id="sf-toggle-donations" class="button button-small" style="cursor: pointer;">
-								<?php esc_html_e( 'Hide Donations', 'simple-fundraiser' ); ?>
-							</button>
-						</div>
-						
-						<div id="sf-donations-content">
-						
-						<?php
-						// Params
-						$paged = isset( $_GET['sf_page'] ) ? max( 1, intval( $_GET['sf_page'] ) ) : 1;
-						$sort = isset( $_GET['sf_sort'] ) ? sanitize_text_field( $_GET['sf_sort'] ) : 'newest';
-						
-						// Sort args
-						$args = array(
-							'post_type'      => 'sf_donation',
-							'posts_per_page' => 10,
-							'paged'          => $paged,
-							'post_status'    => 'publish',
-							'meta_query'     => array(
-								array(
-									'key'   => '_sf_campaign_id',
-									'value' => get_the_ID(),
-								),
-							),
-						);
-						
-						switch ( $sort ) {
-							case 'oldest':
-								$args['meta_key'] = '_sf_date';
-								$args['orderby']  = array( 'meta_value' => 'ASC', 'ID' => 'ASC' );
-								break;
-							case 'amount_high':
-								$args['meta_key'] = '_sf_amount';
-								$args['orderby']  = 'meta_value_num';
-								$args['order']    = 'DESC';
-								break;
-							case 'amount_low':
-								$args['meta_key'] = '_sf_amount';
-								$args['orderby']  = 'meta_value_num';
-								$args['order']    = 'ASC';
-								break;
-							case 'newest':
-							default:
-								$args['meta_key'] = '_sf_date';
-								$args['orderby']  = array( 'meta_value' => 'DESC', 'ID' => 'DESC' );
-								break;
-						}
-						
-						$donations_query = new WP_Query( $args );
-						
-						if ( $donations_query->have_posts() ) : 
-						?>
-						
-							<!-- Sorting Controls -->
-							<div class="sf-donation-controls">
-								<form method="get" class="sf-sort-form">
-									<label for="sf_sort"><?php esc_html_e( 'Sort by:', 'simple-fundraiser' ); ?></label>
-									<select name="sf_sort" id="sf_sort">
-										<option value="newest" <?php selected( $sort, 'newest' ); ?>><?php esc_html_e( 'Newest', 'simple-fundraiser' ); ?></option>
-										<option value="oldest" <?php selected( $sort, 'oldest' ); ?>><?php esc_html_e( 'Oldest', 'simple-fundraiser' ); ?></option>
-										<option value="amount_high" <?php selected( $sort, 'amount_high' ); ?>><?php esc_html_e( 'Highest Amount', 'simple-fundraiser' ); ?></option>
-										<option value="amount_low" <?php selected( $sort, 'amount_low' ); ?>><?php esc_html_e( 'Lowest Amount', 'simple-fundraiser' ); ?></option>
-									</select>
-									<?php if ( isset( $_GET['sf_page'] ) ) : ?>
-										<!-- Reset page on sort -->
-									<?php endif; ?>
-								</form>
-							</div>
-
-							<ul class="sf-donations-list">
-								<?php while ( $donations_query->have_posts() ) : $donations_query->the_post();
-									$donation_id = get_the_ID();
-									$anonymous = get_post_meta( $donation_id, '_sf_anonymous', true );
-									$donor_name = get_post_meta( $donation_id, '_sf_donor_name', true );
-									$amount = get_post_meta( $donation_id, '_sf_amount', true );
-									$message = get_post_meta( $donation_id, '_sf_message', true );
-									$date = get_post_meta( $donation_id, '_sf_date', true );
-								?>
-									<li class="sf-donation-item">
-										<div class="sf-donation-info">
-											<strong class="sf-donor-name">
-												<?php 
-												if ( $anonymous === '1' ) {
-													esc_html_e( 'Anonymous', 'simple-fundraiser' );
-												} else {
-													echo esc_html( $donor_name ? $donor_name : __( 'Someone', 'simple-fundraiser' ) );
-												}
-												
-												// Show donation type if exists
-												$d_type = get_post_meta( $donation_id, '_sf_donation_type', true );
-												if ( $d_type ) {
-													echo ' <span class="sf-donation-type-badge">' . esc_html( $d_type ) . '</span>';
-												}
-												?>
-											</strong>
-											<span class="sf-donation-amount"><?php echo esc_html( sf_format_currency( $amount ) ); ?></span>
-										</div>
-										<?php if ( $message ) : ?>
-											<p class="sf-donation-message">"<?php echo esc_html( $message ); ?>"</p>
-										<?php endif; ?>
-										<span class="sf-donation-date"><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $date ) ) ); ?></span>
-									</li>
-								<?php endwhile; wp_reset_postdata(); ?>
-							</ul>
+					<!-- Campaign Data Tabs -->
+					<div class="sf-campaign-tabs">
+						<ul class="sf-tabs-nav">
+							<li class="active" data-tab="sf-tab-donations">
+								<?php esc_html_e( 'Donations', 'simple-fundraiser' ); ?>
+								<span class="sf-tab-count"><?php echo sf_get_donation_count( get_the_ID() ); ?></span>
+							</li>
 							
-							<div class="sf-pagination">
-								<?php
-								echo paginate_links( array(
-									'base'      => add_query_arg( 'sf_page', '%#%' ),
-									'format'    => '',
-									'current'   => $paged,
-									'total'     => $donations_query->max_num_pages,
-									'prev_text' => __( '&laquo; Prev', 'simple-fundraiser' ),
-									'next_text' => __( 'Next &raquo;', 'simple-fundraiser' ),
-									'type'      => 'list',
-									'add_args'  => array( 'sf_sort' => $sort ),
-								) );
-								?>
-							</div>
+							<?php
+							// Check distribution visibility to decide if we show the tab
+							$dist_visibility = get_post_meta( get_the_ID(), '_sf_dist_visibility', true );
+							if ( ! $dist_visibility ) $dist_visibility = 'public';
+							$show_dist_tab = ( 'private' !== $dist_visibility || current_user_can( 'edit_posts' ) );
+							
+							if ( $show_dist_tab ) : 
+							?>
+								<li data-tab="sf-tab-distribution">
+									<?php esc_html_e( 'Fund Distribution', 'simple-fundraiser' ); ?>
+								</li>
+							<?php endif; ?>
+						</ul>
 
-						<?php else : ?>
-							<p class="sf-no-donations"><?php esc_html_e( 'Be the first to donate!', 'simple-fundraiser' ); ?></p>
+						<!-- Donations Tab Content -->
+						<div id="sf-tab-donations" class="sf-tab-content active">
+							<!-- Recent Donations -->
+							<div class="sf-recent-donations" id="sf-donations-wrapper" data-campaign-id="<?php the_ID(); ?>">
+								<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e9ecef; padding-bottom: 15px; margin-bottom: 20px;">
+									<h3 style="margin: 0; border: none; padding: 0;"><?php esc_html_e( 'Recent Donations', 'simple-fundraiser' ); ?></h3>
+								</div>
+								
+								<div id="sf-donations-content">
+								
+								<?php
+								// Params
+								$paged = isset( $_GET['sf_page'] ) ? max( 1, intval( $_GET['sf_page'] ) ) : 1;
+								$sort = isset( $_GET['sf_sort'] ) ? sanitize_text_field( $_GET['sf_sort'] ) : 'newest';
+								
+								// Sort args
+								$args = array(
+									'post_type'      => 'sf_donation',
+									'posts_per_page' => 10,
+									'paged'          => $paged,
+									'post_status'    => 'publish',
+									'meta_query'     => array(
+										array(
+											'key'   => '_sf_campaign_id',
+											'value' => get_the_ID(),
+										),
+									),
+								);
+								
+								switch ( $sort ) {
+									case 'oldest':
+										$args['meta_key'] = '_sf_date';
+										$args['orderby']  = array( 'meta_value' => 'ASC', 'ID' => 'ASC' );
+										break;
+									case 'amount_high':
+										$args['meta_key'] = '_sf_amount';
+										$args['orderby']  = 'meta_value_num';
+										$args['order']    = 'DESC';
+										break;
+									case 'amount_low':
+										$args['meta_key'] = '_sf_amount';
+										$args['orderby']  = 'meta_value_num';
+										$args['order']    = 'ASC';
+										break;
+									case 'newest':
+									default:
+										$args['meta_key'] = '_sf_date';
+										$args['orderby']  = array( 'meta_value' => 'DESC', 'ID' => 'DESC' );
+										break;
+								}
+								
+								$donations_query = new WP_Query( $args );
+								
+								if ( $donations_query->have_posts() ) : 
+								?>
+								
+									<!-- Sorting Controls -->
+									<div class="sf-donation-controls">
+										<form method="get" class="sf-sort-form">
+											<label for="sf_sort"><?php esc_html_e( 'Sort by:', 'simple-fundraiser' ); ?></label>
+											<select name="sf_sort" id="sf_sort">
+												<option value="newest" <?php selected( $sort, 'newest' ); ?>><?php esc_html_e( 'Newest', 'simple-fundraiser' ); ?></option>
+												<option value="oldest" <?php selected( $sort, 'oldest' ); ?>><?php esc_html_e( 'Oldest', 'simple-fundraiser' ); ?></option>
+												<option value="amount_high" <?php selected( $sort, 'amount_high' ); ?>><?php esc_html_e( 'Highest Amount', 'simple-fundraiser' ); ?></option>
+												<option value="amount_low" <?php selected( $sort, 'amount_low' ); ?>><?php esc_html_e( 'Lowest Amount', 'simple-fundraiser' ); ?></option>
+											</select>
+										</form>
+									</div>
+
+									<ul class="sf-donations-list">
+										<?php while ( $donations_query->have_posts() ) : $donations_query->the_post();
+											$donation_id = get_the_ID();
+											$anonymous = get_post_meta( $donation_id, '_sf_anonymous', true );
+											$donor_name = get_post_meta( $donation_id, '_sf_donor_name', true );
+											$amount = get_post_meta( $donation_id, '_sf_amount', true );
+											$message = get_post_meta( $donation_id, '_sf_message', true );
+											$date = get_post_meta( $donation_id, '_sf_date', true );
+										?>
+											<li class="sf-donation-item">
+												<div class="sf-donation-info">
+													<strong class="sf-donor-name">
+														<?php 
+														if ( $anonymous === '1' ) {
+															esc_html_e( 'Anonymous', 'simple-fundraiser' );
+														} else {
+															echo esc_html( $donor_name ? $donor_name : __( 'Someone', 'simple-fundraiser' ) );
+														}
+														
+														// Show donation type if exists
+														$d_type = get_post_meta( $donation_id, '_sf_donation_type', true );
+														if ( $d_type ) {
+															echo ' <span class="sf-donation-type-badge">' . esc_html( $d_type ) . '</span>';
+														}
+														?>
+													</strong>
+													<span class="sf-donation-amount"><?php echo esc_html( sf_format_currency( $amount ) ); ?></span>
+												</div>
+												<?php if ( $message ) : ?>
+													<p class="sf-donation-message">"<?php echo esc_html( $message ); ?>"</p>
+												<?php endif; ?>
+												<span class="sf-donation-date"><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $date ) ) ); ?></span>
+											</li>
+										<?php endwhile; wp_reset_postdata(); ?>
+									</ul>
+									
+									<div class="sf-pagination">
+										<?php
+										echo paginate_links( array(
+											'base'      => add_query_arg( 'sf_page', '%#%' ),
+											'format'    => '',
+											'current'   => $paged,
+											'total'     => $donations_query->max_num_pages,
+											'prev_text' => __( '&laquo; Prev', 'simple-fundraiser' ),
+											'next_text' => __( 'Next &raquo;', 'simple-fundraiser' ),
+											'type'      => 'list',
+											'add_args'  => array( 'sf_sort' => $sort ),
+										) );
+										?>
+									</div>
+
+								<?php else : ?>
+									<p class="sf-no-donations"><?php esc_html_e( 'Be the first to donate!', 'simple-fundraiser' ); ?></p>
+								<?php endif; ?>
+								</div> <!-- #sf-donations-content -->
+							</div>
+						</div>
+
+						<!-- Distribution Tab Content -->
+						<?php if ( $show_dist_tab ) : 
+							$total_raised = sf_get_campaign_total( get_the_ID() );
+							$total_dist = SF_Distribution_CPT::get_total_distributed( get_the_ID() );
+							$balance = $total_raised - $total_dist;
+						?>
+							<div id="sf-tab-distribution" class="sf-tab-content">
+								<div class="sf-distribution-section">
+									<h3><?php esc_html_e( 'Fund Distribution Report', 'simple-fundraiser' ); ?></h3>
+									
+									<!-- Summary Box -->
+									<div class="sf-distribution-summary">
+										<div class="sf-dist-summary-grid">
+											<div class="sf-dist-stat">
+												<span class="sf-dist-stat-label"><?php esc_html_e( 'Total Collected', 'simple-fundraiser' ); ?></span>
+												<span class="sf-dist-stat-value"><?php echo esc_html( sf_format_currency( $total_raised ) ); ?></span>
+											</div>
+											<div class="sf-dist-stat">
+												<span class="sf-dist-stat-label"><?php esc_html_e( 'Distributed', 'simple-fundraiser' ); ?></span>
+												<span class="sf-dist-stat-value sf-neutral"><?php echo esc_html( sf_format_currency( $total_dist ) ); ?></span>
+											</div>
+											<div class="sf-dist-stat">
+												<span class="sf-dist-stat-label"><?php esc_html_e( 'Remaining Balance', 'simple-fundraiser' ); ?></span>
+												<span class="sf-dist-stat-value sf-positive"><?php echo esc_html( sf_format_currency( $balance ) ); ?></span>
+											</div>
+										</div>
+									</div>
+									
+									<!-- Access Control -->
+									<div id="sf-distribution-report-container" data-campaign-id="<?php the_ID(); ?>" class="<?php echo 'public' === $dist_visibility || current_user_can( 'edit_posts' ) ? 'sf-public-access' : 'sf-restricted-access'; ?>">
+										<?php if ( 'password' === $dist_visibility && ! current_user_can( 'edit_posts' ) ) : ?>
+											<div class="sf-distribution-locked" style="text-align: center; padding: 30px; background: #f8f9fa; border-radius: 8px;">
+												<span class="dashicons dashicons-lock" style="font-size: 40px; width: 40px; height: 40px; color: #6c757d; margin-bottom: 10px;"></span>
+												<p><?php esc_html_e( 'This report is password protected.', 'simple-fundraiser' ); ?></p>
+												<button class="sf-view-report-btn"><?php esc_html_e( 'View Full Report', 'simple-fundraiser' ); ?></button>
+											</div>
+										<?php endif; ?>
+									</div>
+								</div>
+							</div>
 						<?php endif; ?>
-						</div> <!-- #sf-donations-content -->
+					</div>
+
+					<!-- Password Modal -->
+					<div id="sf-password-overlay" class="sf-password-overlay">
+						<div class="sf-password-modal">
+							<h3><?php esc_html_e( 'Enter Password', 'simple-fundraiser' ); ?></h3>
+							<p><?php esc_html_e( 'Please enter the password to view the distribution details.', 'simple-fundraiser' ); ?></p>
+							<input type="password" id="sf-password-input" class="sf-password-input" placeholder="<?php esc_attr_e( 'Password', 'simple-fundraiser' ); ?>">
+							<button id="sf-password-submit" class="sf-password-submit"><?php esc_html_e( 'Submit', 'simple-fundraiser' ); ?></button>
+							<div class="sf-password-error"></div>
+						</div>
 					</div>
 				</div>
 				

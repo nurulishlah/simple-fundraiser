@@ -92,6 +92,15 @@ class SF_Campaign_CPT {
 			'side',
 			'high'
 		);
+
+		add_meta_box(
+			'sf_campaign_distribution',
+			__( 'Distribution Settings', 'simple-fundraiser' ),
+			array( $this, 'render_distribution_meta_box' ),
+			'sf_campaign',
+			'normal',
+			'high'
+		);
 	}
 
 	/**
@@ -198,6 +207,60 @@ class SF_Campaign_CPT {
 	}
 
 	/**
+	 * Render distribution settings meta box
+	 */
+	public function render_distribution_meta_box( $post ) {
+		$visibility = get_post_meta( $post->ID, '_sf_dist_visibility', true );
+		$password = get_post_meta( $post->ID, '_sf_dist_password', true );
+		$types = get_post_meta( $post->ID, '_sf_distribution_types', true );
+		
+		if ( ! $visibility ) {
+			$visibility = 'public';
+		}
+		?>
+		<table class="form-table">
+			<tr>
+				<th><label for="sf_dist_visibility"><?php esc_html_e( 'Report Visibility', 'simple-fundraiser' ); ?></label></th>
+				<td>
+					<select name="sf_dist_visibility" id="sf_dist_visibility">
+						<option value="public" <?php selected( $visibility, 'public' ); ?>><?php esc_html_e( 'Public (Visible to everyone)', 'simple-fundraiser' ); ?></option>
+						<option value="password" <?php selected( $visibility, 'password' ); ?>><?php esc_html_e( 'Password Protected', 'simple-fundraiser' ); ?></option>
+						<option value="private" <?php selected( $visibility, 'private' ); ?>><?php esc_html_e( 'Private (Admin only)', 'simple-fundraiser' ); ?></option>
+					</select>
+					<p class="description"><?php esc_html_e( 'Controls who can see the fund distribution report on the campaign page.', 'simple-fundraiser' ); ?></p>
+				</td>
+			</tr>
+			<tr id="sf_dist_password_row" <?php if ( 'password' !== $visibility ) echo 'style="display:none;"'; ?>>
+				<th><label for="sf_dist_password"><?php esc_html_e( 'Access Password', 'simple-fundraiser' ); ?></label></th>
+				<td>
+					<input type="text" name="sf_dist_password" id="sf_dist_password" value="<?php echo esc_attr( $password ); ?>" class="regular-text">
+					<p class="description"><?php esc_html_e( 'Password required to view the distribution report.', 'simple-fundraiser' ); ?></p>
+				</td>
+			</tr>
+			<tr>
+				<th><label for="sf_distribution_types"><?php esc_html_e( 'Distribution Types', 'simple-fundraiser' ); ?></label></th>
+				<td>
+					<textarea name="sf_distribution_types" id="sf_distribution_types" rows="4" class="large-text code"><?php echo esc_textarea( $types ); ?></textarea>
+					<p class="description"><?php esc_html_e( 'Enter distribution categories, one per line (e.g., Sembako, Medical, Education). These will appear in the type dropdown when adding distributions.', 'simple-fundraiser' ); ?></p>
+				</td>
+			</tr>
+		</table>
+		
+		<script>
+		jQuery(document).ready(function($) {
+			$('#sf_dist_visibility').on('change', function() {
+				if ($(this).val() === 'password') {
+					$('#sf_dist_password_row').show();
+				} else {
+					$('#sf_dist_password_row').hide();
+				}
+			});
+		});
+		</script>
+		<?php
+	}
+
+	/**
 	 * Render progress meta box
 	 */
 	public function render_progress_meta_box( $post ) {
@@ -246,6 +309,9 @@ class SF_Campaign_CPT {
 			'sf_donation_types' => '_sf_donation_types',
 			'sf_default_donation_type' => '_sf_default_donation_type',
 			'sf_qris_image'     => '_sf_qris_image',
+			'sf_dist_visibility' => '_sf_dist_visibility',
+			'sf_dist_password'   => '_sf_dist_password',
+			'sf_distribution_types' => '_sf_distribution_types',
 		);
 
 		foreach ( $fields as $field => $meta_key ) {

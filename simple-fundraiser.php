@@ -27,6 +27,7 @@ define( 'SF_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 // Include required files
 require_once SF_PLUGIN_DIR . 'includes/class-campaign-cpt.php';
 require_once SF_PLUGIN_DIR . 'includes/class-donation-cpt.php';
+require_once SF_PLUGIN_DIR . 'includes/class-distribution-cpt.php';
 require_once SF_PLUGIN_DIR . 'includes/class-admin.php';
 require_once SF_PLUGIN_DIR . 'includes/class-export.php';
 require_once SF_PLUGIN_DIR . 'includes/class-ajax.php';
@@ -53,6 +54,7 @@ function sf_init() {
 	// Initialize classes
 	new SF_Campaign_CPT();
 	new SF_Donation_CPT();
+	new SF_Distribution_CPT();
 	new SF_Admin();
 	new SF_Export();
 	new SF_Ajax();
@@ -72,6 +74,9 @@ function sf_activate() {
 	
 	$donation = new SF_Donation_CPT();
 	$donation->register_post_type();
+	
+	$distribution = new SF_Distribution_CPT();
+	$distribution->register_post_type();
 	
 	// Flush rewrite rules
 	flush_rewrite_rules();
@@ -108,6 +113,29 @@ function sf_enqueue_scripts() {
 	);
 	
 	wp_enqueue_style( 'dashicons' );
+
+	// Enqueue Distribution Report assets (only on single campaign)
+	if ( is_singular( 'sf_campaign' ) ) {
+		wp_enqueue_style(
+			'simple-fundraiser-distribution',
+			SF_PLUGIN_URL . 'assets/css/distribution.css',
+			array(),
+			$version
+		);
+
+		wp_enqueue_script(
+			'simple-fundraiser-distribution',
+			SF_PLUGIN_URL . 'assets/js/distribution.js',
+			array( 'jquery' ),
+			$version,
+			true
+		);
+
+		wp_localize_script( 'simple-fundraiser-distribution', 'sf_dist_obj', array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce'    => wp_create_nonce( 'sf_nonce' )
+		) );
+	}
 
 	wp_localize_script( 'simple-fundraiser-frontend', 'sf_ajax_obj', array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -194,6 +222,34 @@ function sf_get_campaign_total( $campaign_id ) {
 	}
 	
 	return $total;
+}
+
+/**
+ * Get campaign donation count
+ *
+ * @param int $campaign_id Campaign post ID
+ * @return int Total number of donations
+ */
+function sf_get_donation_count( $campaign_id ) {
+	$count = 0;
+	$donations = get_posts( array(
+		'post_type'      => 'sf_donation',
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+		'meta_query'     => array(
+			array(
+				'key'   => '_sf_campaign_id',
+				'value' => $campaign_id,
+			),
+		),
+		'fields'         => 'ids',
+	) );
+	
+	if ( $donations ) {
+		$count = count( $donations );
+	}
+	
+	return $count;
 }
 
 /**
