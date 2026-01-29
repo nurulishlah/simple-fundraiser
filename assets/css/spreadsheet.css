@@ -1,0 +1,219 @@
+/**
+ * Simple Fundraiser - Spreadsheet Styles
+ */
+
+.sf-spreadsheet-wrap {
+    max-width: 100%;
+}
+
+/* Toolbar */
+.sf-spreadsheet-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+}
+
+.sf-filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sf-filter-form select {
+    min-width: 200px;
+}
+
+#sf-add-row {
+    margin-left: auto;
+}
+
+#sf-add-row .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+
+/* Table */
+.sf-spreadsheet-table {
+    background: #fff;
+    border-collapse: collapse;
+}
+
+.sf-spreadsheet-table th,
+.sf-spreadsheet-table td {
+    padding: 8px 10px;
+    vertical-align: middle;
+    border: 1px solid #c3c4c7;
+}
+
+.sf-spreadsheet-table th {
+    background: #f0f0f1;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+/* Column widths */
+.sf-col-id {
+    width: 60px;
+    text-align: center !important;
+}
+
+.sf-col-campaign {
+    width: 180px;
+}
+
+.sf-col-donor {
+    width: 180px;
+}
+
+.sf-col-amount {
+    width: 120px;
+}
+
+.sf-col-date {
+    width: 130px;
+}
+
+.sf-col-type {
+    width: 120px;
+}
+
+.sf-col-anon {
+    width: 60px;
+    text-align: center !important;
+}
+
+.sf-col-actions {
+    width: 100px;
+    text-align: center !important;
+}
+
+/* Inline inputs */
+.sf-cell-input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background: transparent;
+    transition: all 0.15s ease;
+}
+
+.sf-cell-input:hover {
+    border-color: #c3c4c7;
+    background: #fff;
+}
+
+.sf-cell-input:focus {
+    border-color: #2271b1;
+    background: #fff;
+    outline: none;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+.sf-col-anon .sf-cell-input {
+    width: auto;
+}
+
+/* Select styling */
+td select.sf-cell-input {
+    padding: 4px 6px;
+}
+
+/* Action buttons */
+.sf-col-actions .button {
+    padding: 2px 6px;
+    min-height: 28px;
+}
+
+.sf-col-actions .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.sf-col-actions .sf-delete:hover {
+    color: #b32d2e;
+    border-color: #b32d2e;
+}
+
+/* New row styling */
+.sf-new-row {
+    background: #fcf9e8 !important;
+}
+
+.sf-new-label {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #dba617;
+    color: #fff;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Row status indicator */
+.sf-row-status {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+.sf-row-status.saving {
+    color: #dba617;
+}
+
+.sf-row-status.saved {
+    color: #00a32a;
+}
+
+.sf-row-status.error {
+    color: #d63638;
+}
+
+/* Saving state */
+.sf-row.saving {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* No data row */
+.sf-no-data td {
+    text-align: center;
+    padding: 30px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Disabled button */
+#sf-add-row:disabled {
+    cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+
+    .sf-col-campaign,
+    .sf-col-donor {
+        width: 150px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .sf-spreadsheet-toolbar {
+        flex-wrap: wrap;
+    }
+
+    #sf-add-row {
+        margin-left: 0;
+        width: 100%;
+    }
+}

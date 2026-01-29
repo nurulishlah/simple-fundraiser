@@ -17,6 +17,11 @@ class SF_Ajax {
 	public function __construct() {
 		add_action( 'wp_ajax_sf_get_donations', array( $this, 'get_donations' ) );
 		add_action( 'wp_ajax_nopriv_sf_get_donations', array( $this, 'get_donations' ) );
+		
+		// Spreadsheet AJAX handlers
+		add_action( 'wp_ajax_sf_spreadsheet_save', array( $this, 'spreadsheet_save' ) );
+		add_action( 'wp_ajax_sf_spreadsheet_add', array( $this, 'spreadsheet_add' ) );
+		add_action( 'wp_ajax_sf_spreadsheet_delete', array( $this, 'spreadsheet_delete' ) );
 	}
 
 	/**
@@ -138,5 +143,111 @@ class SF_Ajax {
 			'html'       => $html,
 			'pagination' => $pagination,
 		) );
+	}
+
+	/**
+	 * Save a donation via spreadsheet
+	 */
+	public function spreadsheet_save() {
+		check_ajax_referer( 'sf_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+		}
+
+		$donation_id = isset( $_POST['donation_id'] ) ? absint( $_POST['donation_id'] ) : 0;
+		$data = isset( $_POST['data'] ) ? $_POST['data'] : array();
+
+		if ( ! $donation_id || empty( $data ) ) {
+			wp_send_json_error( array( 'message' => 'Missing data' ) );
+		}
+
+		// Update post meta
+		if ( isset( $data['donor_name'] ) ) {
+			update_post_meta( $donation_id, '_sf_donor_name', sanitize_text_field( $data['donor_name'] ) );
+		}
+		if ( isset( $data['amount'] ) ) {
+			update_post_meta( $donation_id, '_sf_amount', sanitize_text_field( $data['amount'] ) );
+		}
+		if ( isset( $data['date'] ) ) {
+			update_post_meta( $donation_id, '_sf_date', sanitize_text_field( $data['date'] ) );
+		}
+		if ( isset( $data['type'] ) ) {
+			update_post_meta( $donation_id, '_sf_donation_type', sanitize_text_field( $data['type'] ) );
+		}
+		if ( isset( $data['anonymous'] ) ) {
+			update_post_meta( $donation_id, '_sf_anonymous', $data['anonymous'] === '1' ? '1' : '0' );
+		}
+
+		wp_send_json_success( array( 'message' => 'Saved' ) );
+	}
+
+	/**
+	 * Add a new donation via spreadsheet
+	 */
+	public function spreadsheet_add() {
+		check_ajax_referer( 'sf_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+		}
+
+		$data = isset( $_POST['data'] ) ? $_POST['data'] : array();
+		
+		if ( empty( $data['campaign_id'] ) || empty( $data['amount'] ) ) {
+			wp_send_json_error( array( 'message' => 'Campaign and Amount are required' ) );
+		}
+
+		// Create new donation post
+		$donor_name = isset( $data['donor_name'] ) ? sanitize_text_field( $data['donor_name'] ) : '';
+		$title = $donor_name ? $donor_name : __( 'Anonymous Donation', 'simple-fundraiser' );
+
+		$post_id = wp_insert_post( array(
+			'post_type'   => 'sf_donation',
+			'post_title'  => $title,
+			'post_status' => 'publish',
+		) );
+
+		if ( is_wp_error( $post_id ) ) {
+			wp_send_json_error( array( 'message' => 'Failed to create donation' ) );
+		}
+
+		// Save meta
+		update_post_meta( $post_id, '_sf_campaign_id', absint( $data['campaign_id'] ) );
+		update_post_meta( $post_id, '_sf_donor_name', $donor_name );
+		update_post_meta( $post_id, '_sf_amount', sanitize_text_field( $data['amount'] ) );
+		update_post_meta( $post_id, '_sf_date', isset( $data['date'] ) ? sanitize_text_field( $data['date'] ) : date( 'Y-m-d' ) );
+		update_post_meta( $post_id, '_sf_donation_type', isset( $data['type'] ) ? sanitize_text_field( $data['type'] ) : '' );
+		update_post_meta( $post_id, '_sf_anonymous', isset( $data['anonymous'] ) && $data['anonymous'] === '1' ? '1' : '0' );
+
+		wp_send_json_success( array(
+			'id'       => $post_id,
+			'edit_url' => get_edit_post_link( $post_id, 'raw' ),
+		) );
+	}
+
+	/**
+	 * Delete a donation via spreadsheet
+	 */
+	public function spreadsheet_delete() {
+		check_ajax_referer( 'sf_spreadsheet_nonce', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'Unauthorized' ) );
+		}
+
+		$donation_id = isset( $_POST['donation_id'] ) ? absint( $_POST['donation_id'] ) : 0;
+
+		if ( ! $donation_id ) {
+			wp_send_json_error( array( 'message' => 'Invalid donation ID' ) );
+		}
+
+		$result = wp_delete_post( $donation_id, true );
+
+		if ( $result ) {
+			wp_send_json_success( array( 'message' => 'Deleted' ) );
+		} else {
+			wp_send_json_error( array( 'message' => 'Failed to delete' ) );
+		}
 	}
 }
