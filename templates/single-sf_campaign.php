@@ -235,6 +235,16 @@ get_header();
 							<div class="sf-password-error"></div>
 						</div>
 					</div>
+
+					<!-- Receipt Modal -->
+					<div id="sf-receipt-overlay" class="sf-password-overlay">
+						<div class="sf-receipt-modal" style="background: transparent; box-shadow: none; max-width: 90%; width: auto;">
+							<div class="sf-receipt-content" style="position: relative;">
+								<button type="button" class="sf-close-receipt" style="position: absolute; top: -40px; right: 0; background: none; border: none; color: white; font-size: 30px; cursor: pointer;">&times;</button>
+								<img src="" id="sf-receipt-image" style="max-width: 100%; max-height: 80vh; border-radius: 4px; box-shadow: 0 5px 30px rgba(0,0,0,0.5);">
+							</div>
+						</div>
+					</div>
 				</div>
 				
 				<aside class="sf-single-sidebar">

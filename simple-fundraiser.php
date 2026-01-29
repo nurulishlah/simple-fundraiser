@@ -154,7 +154,7 @@ add_action( 'wp_enqueue_scripts', 'sf_enqueue_scripts' );
 function sf_admin_scripts( $hook ) {
 	global $post_type;
 	
-	if ( in_array( $post_type, array( 'sf_campaign', 'sf_donation' ), true ) ) {
+	if ( in_array( $post_type, array( 'sf_campaign', 'sf_donation', 'sf_distribution' ), true ) ) {
 		wp_enqueue_media();
 		wp_enqueue_script(
 			'simple-fundraiser-admin',

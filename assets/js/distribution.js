@@ -124,4 +124,30 @@ jQuery(document).ready(function ($) {
             }
         });
     }
+    // Receipt Modal
+    var $receiptOverlay = $('#sf-receipt-overlay');
+    var $receiptImage = $('#sf-receipt-image');
+
+    $(document).on('click', '.sf-view-receipt', function (e) {
+        e.preventDefault();
+        var imageUrl = $(this).data('image-url');
+        $receiptImage.attr('src', imageUrl);
+        $receiptOverlay.addClass('active');
+    });
+
+    $receiptOverlay.on('click', function (e) {
+        if (e.target === this || $(e.target).hasClass('sf-close-receipt')) {
+            $receiptOverlay.removeClass('active');
+            setTimeout(function () {
+                $receiptImage.attr('src', '');
+            }, 300);
+        }
+    });
+
+    $('.sf-close-receipt').on('click', function (e) {
+        $receiptOverlay.removeClass('active');
+        setTimeout(function () {
+            $receiptImage.attr('src', '');
+        }, 300);
+    });
 });

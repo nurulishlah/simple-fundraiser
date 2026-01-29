@@ -146,7 +146,7 @@ class SF_Ajax {
 									<?php if ( $proof_id ) : 
 										$proof_url = wp_get_attachment_url( $proof_id );
 									?>
-										<br><a href="<?php echo esc_url( $proof_url ); ?>" target="_blank" style="font-size: 0.85em;">
+										<br><a href="#" class="sf-view-receipt" data-image-url="<?php echo esc_url( $proof_url ); ?>" style="font-size: 0.85em;">
 											<span class="dashicons dashicons-media-default" style="vertical-align: middle; font-size: 14px;"></span> 
 											<?php esc_html_e( 'View Receipt', 'simple-fundraiser' ); ?>
 										</a>
