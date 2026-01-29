@@ -123,7 +123,11 @@ class SF_Spreadsheet {
 						</tr>
 					<?php else : ?>
 						<?php foreach ( $donations as $donation ) : ?>
-							<?php $this->render_row( $donation, $campaigns ); ?>
+							<?php 
+							$row_campaign_id = get_post_meta( $donation->ID, '_sf_campaign_id', true );
+							$row_types = $row_campaign_id ? $this->get_donation_types( $row_campaign_id ) : array();
+							$this->render_row( $donation, $campaigns, false, $row_types ); 
+							?>
 						<?php endforeach; ?>
 					<?php endif; ?>
 				</tbody>
@@ -131,7 +135,7 @@ class SF_Spreadsheet {
 
 			<?php if ( $campaign_id ) : ?>
 				<script type="text/html" id="sf-row-template">
-					<?php $this->render_row( null, $campaigns, true ); ?>
+					<?php $this->render_row( null, $campaigns, true, $donation_types ); ?>
 				</script>
 			<?php endif; ?>
 		</div>
@@ -141,7 +145,7 @@ class SF_Spreadsheet {
 	/**
 	 * Render a single table row
 	 */
-	private function render_row( $donation = null, $campaigns = array(), $is_template = false ) {
+	private function render_row( $donation = null, $campaigns = array(), $is_template = false, $donation_types = array() ) {
 		$is_new = is_null( $donation );
 		$id = $is_new ? '{{ID}}' : $donation->ID;
 		$campaign_id = $is_new ? '' : get_post_meta( $donation->ID, '_sf_campaign_id', true );
@@ -178,7 +182,18 @@ class SF_Spreadsheet {
 				<input type="date" class="sf-cell-input" data-field="date" value="<?php echo esc_attr( $date ); ?>">
 			</td>
 			<td class="sf-col-type">
-				<input type="text" class="sf-cell-input" data-field="type" value="<?php echo esc_attr( $type ); ?>" placeholder="<?php esc_attr_e( 'Type', 'simple-fundraiser' ); ?>">
+				<?php if ( ! empty( $donation_types ) ) : ?>
+					<select class="sf-cell-input" data-field="type">
+						<option value=""><?php esc_html_e( '— Select —', 'simple-fundraiser' ); ?></option>
+						<?php foreach ( $donation_types as $dtype ) : ?>
+							<option value="<?php echo esc_attr( $dtype ); ?>" <?php selected( $type, $dtype ); ?>>
+								<?php echo esc_html( $dtype ); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				<?php else : ?>
+					<input type="text" class="sf-cell-input" data-field="type" value="<?php echo esc_attr( $type ); ?>" placeholder="<?php esc_attr_e( 'Type', 'simple-fundraiser' ); ?>">
+				<?php endif; ?>
 			</td>
 			<td class="sf-col-anon">
 				<input type="checkbox" class="sf-cell-input" data-field="anonymous" <?php checked( $anonymous, '1' ); ?>>
