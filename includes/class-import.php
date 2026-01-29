@@ -29,7 +29,8 @@ class SF_Import {
 			__( 'Import CSV', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_import',
-			array( $this, 'render_import_page' )
+			array( $this, 'render_import_page' ),
+			25
 		);
 	}
 

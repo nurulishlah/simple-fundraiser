@@ -590,3 +590,135 @@ msgstr "-- Tidak Ada --"
 #: includes/class-campaign-cpt.php:178
 msgid "Used when no type is selected during import or manual entry (Save to update list)."
 msgstr "Digunakan saat tidak ada tipe yang dipilih saat impor atau entri manual (Simpan untuk memperbarui daftar)."
+
+#: includes/class-campaign-cpt.php:310
+msgid "Manage Donations"
+msgstr "Kelola Donasi"
+
+#: includes/class-spreadsheet.php:41
+msgid "Spreadsheet"
+msgstr "Spreadsheet"
+
+#: includes/class-spreadsheet.php:88
+msgid "Donations Spreadsheet"
+msgstr "Spreadsheet Donasi"
+
+#: includes/class-spreadsheet.php:96
+msgid "Campaign:"
+msgstr "Kampanye:"
+
+#: includes/class-spreadsheet.php:107
+msgid "Filter"
+msgstr "Filter"
+
+#: includes/class-spreadsheet.php:111
+msgid "Select a campaign first"
+msgstr "Pilih kampanye terlebih dahulu"
+
+#: includes/class-spreadsheet.php:119
+msgid "selected"
+msgstr "dipilih"
+
+#: includes/class-spreadsheet.php:122
+msgid "Bulk Actions"
+msgstr "Aksi Massal"
+
+#: includes/class-spreadsheet.php:123
+msgid "Delete"
+msgstr "Hapus"
+
+#: includes/class-spreadsheet.php:124
+msgid "Set as Anonymous"
+msgstr "Jadikan Hamba Allah"
+
+#: includes/class-spreadsheet.php:125
+msgid "Set as Not Anonymous"
+msgstr "Jadikan Bukan Hamba Allah"
+
+#: includes/class-spreadsheet.php:127
+msgid "Change Type"
+msgstr "Ubah Jenis"
+
+#: includes/class-spreadsheet.php:137
+msgid "Apply"
+msgstr "Terapkan"
+
+#: includes/class-spreadsheet.php:138
+msgid "Clear Selection"
+msgstr "Hapus Seleksi"
+
+#: includes/class-spreadsheet.php:147
+msgid "Select All"
+msgstr "Pilih Semua"
+
+#: includes/class-spreadsheet.php:157
+msgid "Anon"
+msgstr "H.A."
+
+#: includes/class-spreadsheet.php:158
+msgid "Actions"
+msgstr "Aksi"
+
+#: includes/class-spreadsheet.php:162
+msgid "No donations found. Add one using the button above."
+msgstr "Tidak ada donasi ditemukan. Tambahkan dengan tombol di atas."
+
+#: includes/class-spreadsheet.php:181
+msgid "Page %1$d of %2$d (%3$d donations)"
+msgstr "Halaman %1$d dari %2$d (%3$d donasi)"
+
+#: includes/class-spreadsheet.php:195
+msgid "Previous"
+msgstr "Sebelumnya"
+
+#: includes/class-spreadsheet.php:199
+msgid "Next"
+msgstr "Selanjutnya"
+
+#: includes/class-spreadsheet.php:226
+msgid "New"
+msgstr "Baru"
+
+#: includes/class-spreadsheet.php:243
+msgid "Donor name"
+msgstr "Nama donatur"
+
+#: includes/class-spreadsheet.php:261
+msgid "— Select —"
+msgstr "— Pilih —"
+
+#: includes/class-spreadsheet.php:269
+msgid "Type"
+msgstr "Jenis"
+
+#: includes/class-spreadsheet.php:280
+msgid "Save"
+msgstr "Simpan"
+
+#: includes/class-spreadsheet.php:281
+msgid "Cancel"
+msgstr "Batal"
+
+#: includes/class-spreadsheet.php:71
+msgid "Are you sure you want to delete this donation?"
+msgstr "Apakah Anda yakin ingin menghapus donasi ini?"
+
+#: includes/class-spreadsheet.php:72
+msgid "Are you sure you want to delete %d donations?"
+msgstr "Apakah Anda yakin ingin menghapus %d donasi?"
+
+#: includes/class-spreadsheet.php:73
+msgid "Saving..."
+msgstr "Menyimpan..."
+
+#: includes/class-spreadsheet.php:74
+msgid "Saved!"
+msgstr "Tersimpan!"
+
+#: includes/class-spreadsheet.php:75
+msgid "Error saving. Please try again."
+msgstr "Gagal menyimpan. Silakan coba lagi."
+
+#: includes/class-spreadsheet.php:284
+msgid "Edit"
+msgstr "Edit"

@@ -21,6 +21,7 @@ class SF_Campaign_CPT {
 		add_action( 'save_post_sf_campaign', array( $this, 'save_meta' ) );
 		add_filter( 'manage_sf_campaign_posts_columns', array( $this, 'add_columns' ) );
 		add_action( 'manage_sf_campaign_posts_custom_column', array( $this, 'render_columns' ), 10, 2 );
+		add_filter( 'post_row_actions', array( $this, 'add_row_actions' ), 10, 2 );
 	}
 
 	/**
@@ -294,5 +295,24 @@ class SF_Campaign_CPT {
 				echo esc_html( round( $progress, 1 ) . '%' );
 				break;
 		}
+	}
+
+	/**
+	 * Add row actions for campaigns
+	 */
+	public function add_row_actions( $actions, $post ) {
+		if ( 'sf_campaign' !== $post->post_type ) {
+			return $actions;
+		}
+
+		$spreadsheet_url = admin_url( 'edit.php?post_type=sf_campaign&page=sf_spreadsheet&campaign_id=' . $post->ID );
+
+		$actions['sf_manage_donations'] = sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( $spreadsheet_url ),
+			esc_html__( 'Manage Donations', 'simple-fundraiser' )
+		);
+
+		return $actions;
 	}
 }
