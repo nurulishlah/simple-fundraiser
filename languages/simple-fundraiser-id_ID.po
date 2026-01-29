@@ -808,6 +808,15 @@ msgstr "Laporan Penyaluran"
 msgid "View Proof"
 msgstr "Lihat Bukti"
 
+msgid "Total Collected"
+msgstr "Total Terkumpul"
+
+msgid "Distributed"
+msgstr "Disalurkan"
+
+msgid "Remaining Balance"
+msgstr "Sisa Saldo"
+
 msgid "Close"
 msgstr "Tutup"
 
