@@ -17,6 +17,7 @@ class SF_Admin {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'reorder_submenu' ), 999 );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'wp_dashboard_setup', array( $this, 'add_dashboard_widget' ) );
 	}
@@ -31,7 +32,8 @@ class SF_Admin {
 			__( 'Stats', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_stats',
-			array( $this, 'render_stats_page' )
+			array( $this, 'render_stats_page' ),
+			5
 		);
 
 		add_submenu_page(
@@ -40,8 +42,56 @@ class SF_Admin {
 			__( 'Settings', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_settings',
-			array( $this, 'render_settings_page' )
+			array( $this, 'render_settings_page' ),
+			99
 		);
+	}
+
+	/**
+	 * Reorder the submenu items
+	 */
+	public function reorder_submenu() {
+		global $submenu;
+
+		$parent = 'edit.php?post_type=sf_campaign';
+
+		if ( ! isset( $submenu[ $parent ] ) ) {
+			return;
+		}
+
+		// Define the desired order by slug
+		$order = array(
+			'edit.php?post_type=sf_campaign',      // Campaigns (All Campaigns)
+			'sf_stats',                             // Stats
+			'post-new.php?post_type=sf_campaign',  // Add New Campaign
+			'edit.php?post_type=sf_donation',      // Donations
+			'post-new.php?post_type=sf_donation',  // Add New Donation
+			'sf_spreadsheet',                       // Spreadsheet
+			'sf_export',                            // Export
+			'sf_import',                            // Import CSV
+			'sf_settings',                          // Settings
+		);
+
+		$new_submenu = array();
+		$remaining = $submenu[ $parent ];
+
+		// First, add items in the specified order
+		foreach ( $order as $slug ) {
+			foreach ( $remaining as $key => $item ) {
+				if ( $item[2] === $slug ) {
+					$new_submenu[] = $item;
+					unset( $remaining[ $key ] );
+					break;
+				}
+			}
+		}
+
+		// Append any remaining items not in our order list
+		foreach ( $remaining as $item ) {
+			$new_submenu[] = $item;
+		}
+
+		$submenu[ $parent ] = $new_submenu;
 	}
 
 	/**
