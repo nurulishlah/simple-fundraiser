@@ -30,7 +30,8 @@ class SF_Export {
 			__( 'Export', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_export',
-			array( $this, 'render_content' )
+			array( $this, 'render_content' ),
+			20
 		);
 	}
 

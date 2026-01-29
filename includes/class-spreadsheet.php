@@ -30,7 +30,8 @@ class SF_Spreadsheet {
 			__( 'Spreadsheet', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_spreadsheet',
-			array( $this, 'render_page' )
+			array( $this, 'render_page' ),
+			12
 		);
 	}
 

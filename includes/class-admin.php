@@ -31,7 +31,8 @@ class SF_Admin {
 			__( 'Stats', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_stats',
-			array( $this, 'render_stats_page' )
+			array( $this, 'render_stats_page' ),
+			5
 		);
 
 		add_submenu_page(
@@ -40,7 +41,8 @@ class SF_Admin {
 			__( 'Settings', 'simple-fundraiser' ),
 			'manage_options',
 			'sf_settings',
-			array( $this, 'render_settings_page' )
+			array( $this, 'render_settings_page' ),
+			99
 		);
 	}
 
